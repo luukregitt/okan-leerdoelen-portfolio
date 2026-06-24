@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OKAN Leerdoelen – Voortgang</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #F0F2F5; color: #1a1a1a; padding: 24px 16px 48px; }
+  header { max-width: 760px; margin: 0 auto 28px; }
+  header h1 { font-size: 22px; font-weight: 700; color: #1a1a1a; margin-bottom: 4px; }
+  header p { font-size: 13px; color: #666; }
+  .info-veld { max-width: 760px; margin: 0 auto 28px; background: white; border-radius: 12px; padding: 16px 20px; display: flex; align-items: center; gap: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); flex-wrap: wrap; }
+  .info-item { display: flex; align-items: center; gap: 8px; }
+  .info-veld label { font-size: 13px; font-weight: 600; color: #444; white-space: nowrap; }
+  .info-veld input, .info-veld select { border: 1.5px solid #ddd; border-radius: 8px; padding: 8px 12px; font-size: 14px; font-family: inherit; outline: none; transition: border-color 0.2s; background: #fafafa; }
+  .info-veld input { min-width: 160px; }
+  .info-veld select { min-width: 140px; cursor: pointer; }
+  .info-veld input:focus, .info-veld select:focus { border-color: #4A90D9; }
+  .sectie-titel { max-width: 760px; margin: 0 auto 10px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding-left: 4px; }
+  .sectie-groep { max-width: 760px; margin: 0 auto 24px; }
+  .kaart { background: white; border-radius: 12px; border-left: 5px solid; padding: 14px 16px; margin-bottom: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.07); }
+  .kaart-top { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .icoon { font-size: 24px; min-width: 34px; text-align: center; line-height: 1; }
+  .ms-icon { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 5px; font-size: 16px; font-weight: 700; color: white; min-width: 30px; }
+  .leerdoel-tekst { flex: 1; }
+  .leerdoel-tekst .vaardigheid { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
+  .leerdoel-tekst .doel { font-size: 13px; color: #1a1a1a; line-height: 1.4; }
+  .kaart-bottom { display: grid; grid-template-columns: 1fr 220px; gap: 12px; align-items: center; }
+  .kaart-links { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .fase-select { font-family: inherit; font-size: 12px; border: 1.5px solid #ddd; border-radius: 8px; padding: 5px 10px; background: #fafafa; cursor: pointer; outline: none; transition: border-color 0.2s; min-width: 110px; flex-shrink: 0; }
+  .fase-select:focus { border-color: #4A90D9; }
+  .balk-wrap { flex: 1; display: flex; gap: 4px; }
+  .balk-stap { flex: 1; height: 18px; border-radius: 4px; background: #E8EAF0; transition: background 0.3s ease, transform 0.2s ease; }
+  .balk-stap.actief { transform: scaleY(1.1); }
+  .fase-label { font-size: 11px; color: #888; min-width: 42px; text-align: right; flex-shrink: 0; }
+  .feedback-kolom { width: 220px; }
+  .feedback-vak { padding: 7px 10px; background: #FFFBEA; border: 1.5px solid #F5D97A; border-radius: 8px; display: none; }
+  .feedback-vak .feedback-label { font-size: 9px; font-weight: 700; color: #8a6d00; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 3px; }
+  .feedback-vak .feedback-tekst { font-size: 12px; color: #4a3c00; line-height: 1.4; white-space: pre-wrap; }
+  .cultuur    { border-color: #AFA9EC; } .cultuur    .vaardigheid { color: #3C3489; }
+  .tijdruimte { border-color: #5DCAA5; } .tijdruimte .vaardigheid { color: #085041; }
+  .digitaal   { border-color: #85B7EB; } .digitaal   .vaardigheid { color: #0C447C; }
+  .techniek   { border-color: #EF9F27; } .techniek   .vaardigheid { color: #633806; }
+  .leer       { border-color: #97C459; } .leer       .vaardigheid { color: #27500A; }
+  .gods       { border-color: #ED93B1; } .gods       .vaardigheid { color: #72243E; }
+  .cultuur    .balk-stap.actief { background: #7C6FD4; }
+  .tijdruimte .balk-stap.actief { background: #2BAF84; }
+  .digitaal   .balk-stap.actief { background: #3A82D0; }
+  .techniek   .balk-stap.actief { background: #D4850A; }
+  .leer       .balk-stap.actief { background: #6BAA2A; }
+  .gods       .balk-stap.actief { background: #C4527A; }
+  .opslaan-knop { display: block; max-width: 760px; margin: 8px auto 0; background: #2B579A; color: white; border: none; border-radius: 10px; padding: 13px 24px; font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; width: 100%; transition: background 0.2s; }
+  .opslaan-knop:hover { background: #1E3F70; }
+  .opslaan-knop:disabled { background: #aaa; cursor: not-allowed; }
+  .bevestiging { display: none; max-width: 760px; margin: 10px auto 0; text-align: center; font-size: 13px; color: #2BAF84; font-weight: 600; }
+  .status { max-width: 760px; margin: 0 auto 12px; font-size: 12px; color: #888; text-align: right; min-height: 18px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>📚 Mijn leerdoelen – OKAN</h1>
+  <p>Vul je naam en klas in, kies per leerdoel je fase en sla op.</p>
+</header>
+
+<div class="info-veld">
+  <div class="info-item">
+    <label for="leerling-naam">Naam:</label>
+    <input type="text" id="leerling-naam" placeholder="Jouw naam…">
+  </div>
+  <div class="info-item">
+    <label for="leerling-klas">Klas:</label>
+    <select id="leerling-klas">
+      <option value="">— Kies klas —</option>
+      <option value="wit">Wit</option>
+      <option value="zwart">Zwart</option>
+      <option value="roze">Roze</option>
+      <option value="oranje">Oranje</option>
+      <option value="paars">Paars</option>
+      <option value="mint">Mint</option>
+      <option value="rood">Rood</option>
+      <option value="blauw">Blauw</option>
+      <option value="geel">Geel</option>
+      <option value="groen">Groen</option>
+      <option value="goud">Goud</option>
+      <option value="zilver">Zilver</option>
+    </select>
+  </div>
+</div>
+
+<div class="status" id="status"></div>
+<div id="leerdoelen-container"></div>
+
+<button class="opslaan-knop" id="opslaan-knop" onclick="slaanOp()">💾 Voortgang opslaan</button>
+<p class="bevestiging" id="bevestiging">✅ Voortgang opgeslagen!</p>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD8o-_FR2mvEciuxDgkfY__XRF_VtAZwUM",
+  authDomain: "okan-leerdoelen.firebaseapp.com",
+  projectId: "okan-leerdoelen",
+  storageBucket: "okan-leerdoelen.firebasestorage.app",
+  messagingSenderId: "767763105714",
+  appId: "1:767763105714:web:4a79429a484b22a30d06ab"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const FASE_LABELS = ["Nog niet begonnen","Fase 1","Fase 2","Fase 3","Fase 4","Fase 5"];
+
+const leerdoelen = [
+  { icoon:"🫀",   vaardigheid:"Cultuur",                             doel:"Ik leef gezond en netjes.",                                          klasse:"cultuur" },
+  { icoon:"🗣️",  vaardigheid:"Cultuur",                             doel:"Ik geef mijn mening.",                                               klasse:"cultuur" },
+  { icoon:"🎨",   vaardigheid:"Cultuur",                             doel:"Ik maak een creatief product.",                                       klasse:"cultuur" },
+  { icoon:"🇧🇪", vaardigheid:"Cultuur",                             doel:"Ik gedraag me gepast in de Belgische samenleving.",                   klasse:"cultuur" },
+  { icoon:"🏙️",  vaardigheid:"Cultuur",                             doel:"Ik gebruik de diensten in mijn stad.",                                klasse:"cultuur" },
+  { icoon:"🕰️🌍",vaardigheid:"Tijd en ruimte",                      doel:"Ik leg uit hoe mensen leven in verschillende tijden en plaatsen.",    klasse:"tijdruimte" },
+  { icoon:"🪜🧭", vaardigheid:"Tijd en ruimte",                      doel:"Ik leg uit waar ik ben en waar ik naartoe wil.",                      klasse:"tijdruimte" },
+  { icoon:"💻",   vaardigheid:"Digitale vaardigheden",               doel:"Ik bedien een computer.",                                             klasse:"digitaal" },
+  { icoon:"📱",   vaardigheid:"Digitale vaardigheden",               doel:"Ik gebruik digitale en online mediatools.",                           klasse:"digitaal" },
+  { icoon:"W",    vaardigheid:"Digitale vaardigheden",               doel:"Ik werk met het programma Word.",                                     klasse:"digitaal", ms:"#2B579A" },
+  { icoon:"X",    vaardigheid:"Digitale vaardigheden",               doel:"Ik werk met het programma Excel.",                                    klasse:"digitaal", ms:"#217346" },
+  { icoon:"P",    vaardigheid:"Digitale vaardigheden",               doel:"Ik werk met het programma Powerpoint.",                               klasse:"digitaal", ms:"#D24726" },
+  { icoon:"📐",   vaardigheid:"Techniek en praktische vaardigheden", doel:"Ik meet met een meetinstrument.",                                     klasse:"techniek" },
+  { icoon:"⛑️",  vaardigheid:"Techniek en praktische vaardigheden", doel:"Ik werk veilig volgens de regels.",                                   klasse:"techniek" },
+  { icoon:"📋",   vaardigheid:"Techniek en praktische vaardigheden", doel:"Ik werk het product goed af met een stappenplan.",                    klasse:"techniek" },
+  { icoon:"🔵",   vaardigheid:"Leerstrategie",                       doel:"Ik vat de informatie samen.",                                         klasse:"leer" },
+  { icoon:"🧠",   vaardigheid:"Leerstrategie",                       doel:"Ik memoriseer de inhoud van de les.",                                 klasse:"leer" },
+  { icoon:"🔤",   vaardigheid:"Leerstrategie (ALFA)",                doel:"Ik memoriseer de woorden uit de les.",                                klasse:"leer" },
+  { icoon:"📄",   vaardigheid:"Leerstrategie",                       doel:"Ik herken de structuur van een tekst.",                               klasse:"leer" },
+  { icoon:"💡",   vaardigheid:"Leerstrategie",                       doel:"Ik pas de leerstof toe om problemen op te lossen.",                   klasse:"leer" },
+  { icoon:"🙏",   vaardigheid:"Godsdienst",                          doel:"Ik zeg wat ik belangrijk vind.",                                      klasse:"gods" },
+  { icoon:"⛪",   vaardigheid:"Godsdienst",                          doel:"Ik herken de verschillende godsdiensten.",                            klasse:"gods" },
+  { icoon:"❤️",  vaardigheid:"Godsdienst",                          doel:"Ik toon respect voor iedereen in een gesprek.",                       klasse:"gods" },
+];
+
+const secties = [
+  { label:"Cultuur", klasse:"cultuur" },
+  { label:"Tijd en ruimte", klasse:"tijdruimte" },
+  { label:"Digitale vaardigheden", klasse:"digitaal" },
+  { label:"Techniek en praktische vaardigheden", klasse:"techniek" },
+  { label:"Leerstrategie", klasse:"leer" },
+  { label:"Godsdienst", klasse:"gods" },
+];
+
+const categoryColors = { cultuur:'#3C3489', tijdruimte:'#085041', digitaal:'#0C447C', techniek:'#633806', leer:'#27500A', gods:'#72243E' };
+const container = document.getElementById('leerdoelen-container');
+
+let globaleIdx = 0;
+secties.forEach(sectie => {
+  const groepItems = leerdoelen.filter(l => l.klasse === sectie.klasse);
+  const titelEl = document.createElement('div');
+  titelEl.className = 'sectie-titel';
+  titelEl.style.color = categoryColors[sectie.klasse];
+  titelEl.textContent = sectie.label;
+  container.appendChild(titelEl);
+  const groep = document.createElement('div');
+  groep.className = 'sectie-groep';
+  groepItems.forEach((item) => {
+    const idx = globaleIdx++;
+    const id = `doel_${idx}`;
+    const kaart = document.createElement('div');
+    kaart.className = `kaart ${item.klasse}`;
+    const icoonHtml = item.ms
+      ? `<span class="ms-icon" style="background:${item.ms}">${item.icoon}</span>`
+      : `<span class="icoon">${item.icoon}</span>`;
+    kaart.innerHTML = `
+      <div class="kaart-top">
+        ${icoonHtml}
+        <div class="leerdoel-tekst">
+          <div class="vaardigheid">${item.vaardigheid}</div>
+          <div class="doel">${item.doel}</div>
+        </div>
+      </div>
+      <div class="kaart-bottom">
+        <div class="kaart-links">
+          <select class="fase-select" id="${id}" onchange="updateBalk('${id}')">
+            ${FASE_LABELS.map((l,i) => `<option value="${i}">${l}</option>`).join('')}
+          </select>
+          <div class="balk-wrap" id="balk_${id}">
+            ${[1,2,3,4,5].map(i => `<div class="balk-stap" id="stap_${id}_${i}"></div>`).join('')}
+          </div>
+          <div class="fase-label" id="label_${id}">0 / 5</div>
+        </div>
+        <div class="feedback-kolom">
+          <div class="feedback-vak" id="feedback_${id}">
+            <div class="feedback-label">✏️ Leerkracht</div>
+            <div class="feedback-tekst" id="feedbacktekst_${id}"></div>
+          </div>
+        </div>
+      </div>`;
+    groep.appendChild(kaart);
+  });
+  container.appendChild(groep);
+});
+
+window.updateBalk = function(id) {
+  const val = parseInt(document.getElementById(id).value);
+  for (let i = 1; i <= 5; i++) {
+    document.getElementById(`stap_${id}_${i}`).classList.toggle('actief', i <= val);
+  }
+  document.getElementById(`label_${id}`).textContent = `${val} / 5`;
+};
+
+function setStatus(msg) { document.getElementById('status').textContent = msg; }
+
+async function laadVoortgang() {
+  const naam = document.getElementById('leerling-naam').value.trim();
+  const klas = document.getElementById('leerling-klas').value;
+  if (!naam || !klas) return;
+  setStatus('⏳ Voortgang laden…');
+  try {
+    const ref = doc(db, 'klassen', klas, 'leerlingen', naam);
+    const snap = await getDoc(ref);
+    if (snap.exists()) {
+      const data = snap.data();
+      leerdoelen.forEach((item, idx) => {
+        const id = `doel_${idx}`;
+        const fase = data.leerdoelen?.[item.doel];
+        if (fase !== undefined) { document.getElementById(id).value = fase; window.updateBalk(id); }
+        // Toon feedback indien aanwezig
+        const feedbackTekst = data.feedback?.[item.doel];
+        const feedbackVak = document.getElementById(`feedback_${id}`);
+        const feedbackEl = document.getElementById(`feedbacktekst_${id}`);
+        if (feedbackTekst && feedbackTekst.trim() !== '') {
+          feedbackEl.textContent = feedbackTekst;
+          feedbackVak.style.display = 'block';
+        } else {
+          feedbackVak.style.display = 'none';
+        }
+      });
+      setStatus(`✅ Voortgang van ${naam} geladen.`);
+    } else {
+      setStatus(`Geen opgeslagen voortgang gevonden voor ${naam}.`);
+    }
+  } catch(e) {
+    setStatus('⚠️ Kon voortgang niet laden. Controleer je internetverbinding.');
+  }
+}
+
+window.slaanOp = async function() {
+  const naam = document.getElementById('leerling-naam').value.trim();
+  const klas = document.getElementById('leerling-klas').value;
+  if (!naam || !klas) { alert('Vul je naam en klas in voor je opslaat.'); return; }
+  const knop = document.getElementById('opslaan-knop');
+  knop.disabled = true;
+  setStatus('⏳ Opslaan…');
+  const data = { naam, klas, tijdstip: new Date().toLocaleString('nl-BE'), leerdoelen: {} };
+  leerdoelen.forEach((item, idx) => {
+    const id = `doel_${idx}`;
+    const el = document.getElementById(id);
+    if (el) data.leerdoelen[item.doel] = parseInt(el.value);
+  });
+  try {
+    // Haal bestaande feedback op zodat die niet overschreven wordt
+    const ref = doc(db, 'klassen', klas, 'leerlingen', naam);
+    const snap = await getDoc(ref);
+    if (snap.exists() && snap.data().feedback) {
+      data.feedback = snap.data().feedback;
+    }
+    await setDoc(ref, data);
+    setStatus('');
+    const bevestiging = document.getElementById('bevestiging');
+    bevestiging.style.display = 'block';
+    setTimeout(() => bevestiging.style.display = 'none', 3000);
+  } catch(e) {
+    setStatus('⚠️ Opslaan mislukt. Controleer je internetverbinding.');
+  }
+  knop.disabled = false;
+};
+
+document.getElementById('leerling-naam').addEventListener('change', laadVoortgang);
+document.getElementById('leerling-klas').addEventListener('change', laadVoortgang);
+</script>
+</body>
+</html>
