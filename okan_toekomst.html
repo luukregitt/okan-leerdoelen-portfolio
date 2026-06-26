@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mijn Toekomst – OKAN Portfolio</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #F0F2F5; color: #1a1a1a; padding: 0 0 60px; }
+
+  /* NAV */
+  nav { background: white; box-shadow: 0 1px 4px rgba(0,0,0,0.09); padding: 14px 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; position: sticky; top: 0; z-index: 100; }
+  nav a { text-decoration: none; color: #2B579A; font-size: 13px; font-weight: 600; }
+  nav .sep { color: #ccc; }
+  nav h1 { font-size: 16px; font-weight: 700; color: #1a1a1a; margin-left: auto; }
+
+  /* TABS */
+  .tabs { max-width: 860px; margin: 24px auto 0; display: flex; gap: 8px; flex-wrap: wrap; padding: 0 16px; }
+  .tab { padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; border: 2px solid transparent; background: white; color: #666; transition: all 0.15s; }
+  .tab:hover { background: #e8eaf0; }
+  .tab.actief { background: #2B579A; color: white; border-color: #2B579A; }
+
+  /* SECTIE */
+  .sectie { display: none; max-width: 860px; margin: 20px auto 0; padding: 0 16px; }
+  .sectie.actief { display: block; }
+
+  .kaart { background: white; border-radius: 16px; padding: 28px; box-shadow: 0 1px 6px rgba(0,0,0,0.08); margin-bottom: 20px; }
+  .kaart h2 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+  .kaart .subtitel { font-size: 13px; color: #888; margin-bottom: 20px; }
+
+  /* OPSLAAN */
+  .opslaan-balk { display: flex; align-items: center; gap: 12px; margin-top: 24px; padding-top: 20px; border-top: 1px solid #eee; }
+  .opslaan-knop { background: #2B579A; color: white; border: none; border-radius: 8px; padding: 10px 22px; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; }
+  .opslaan-knop:hover { background: #1E3F70; }
+  .opslaan-knop:disabled { background: #aaa; }
+  .opslaan-bev { font-size: 13px; color: #2BAF84; font-weight: 600; display: none; }
+  .status-msg { font-size: 12px; color: #aaa; }
+
+  /* INVOERVELDEN */
+  .veld-groep { margin-bottom: 18px; }
+  .veld-groep label { font-size: 12px; font-weight: 700; color: #555; display: block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .veld-groep input[type=text], .veld-groep textarea {
+    width: 100%; border: 1.5px solid #ddd; border-radius: 8px; padding: 9px 12px;
+    font-size: 14px; font-family: inherit; outline: none; background: #fafafa;
+    transition: border-color 0.2s; resize: vertical;
+  }
+  .veld-groep input:focus, .veld-groep textarea:focus { border-color: #4A90D9; background: white; }
+
+  /* TIJDLIJN */
+  .tijdlijn { display: flex; align-items: flex-start; gap: 0; margin: 24px 0; overflow-x: auto; padding-bottom: 8px; }
+  .tijdlijn-stap { display: flex; flex-direction: column; align-items: center; min-width: 130px; }
+  .tijdlijn-cirkel { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 10px; border: 3px solid; }
+  .tijdlijn-label { font-size: 12px; font-weight: 700; text-align: center; margin-bottom: 6px; }
+  .tijdlijn-datum input { width: 110px; border: 1.5px solid #ddd; border-radius: 6px; padding: 5px 8px; font-size: 12px; font-family: inherit; text-align: center; background: #fafafa; outline: none; }
+  .tijdlijn-datum input:focus { border-color: #4A90D9; }
+  .tijdlijn-pijl { font-size: 24px; color: #ccc; margin-top: 20px; padding: 0 4px; align-self: flex-start; margin-top: 22px; }
+
+  .stap-alfa    { border-color: #3B3BA6; background: #EEEDFE; }
+  .stap-in      { border-color: #8B2FC9; background: #F3E8FD; }
+  .stap-uit     { border-color: #C9402F; background: #FDECEA; }
+  .stap-snuffel { border-color: #E07B20; background: #FEF3E8; }
+  .stap-nieuw   { border-color: #C92F7A; background: #FDEAF3; }
+
+  /* ONDERWIJS TABEL */
+  .ok-tabel { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+  .ok-tabel th { background: #1A3A6B; color: white; padding: 10px 14px; text-align: left; font-size: 13px; }
+  .ok-tabel td { padding: 9px 14px; font-size: 13px; border-bottom: 1px solid #eee; }
+  .ok-tabel tr:nth-child(even) td { background: #f0f4fa; }
+  .ok-badge { display: inline-block; background: #1A3A6B; color: white; border-radius: 4px; padding: 2px 8px; font-size: 12px; font-weight: 700; min-width: 44px; text-align: center; }
+
+  .leeftijd-tabel { width: 100%; border-collapse: collapse; }
+  .leeftijd-tabel th { background: #1A7A8A; color: white; padding: 9px 14px; font-size: 13px; text-align: left; }
+  .leeftijd-tabel td { padding: 8px 14px; font-size: 13px; border-bottom: 1px solid #eee; }
+  .leeftijd-tabel tr:nth-child(even) td { background: #e8f7f9; }
+  .ja { color: #2BAF84; font-weight: 700; }
+  .nee { color: #e55; font-weight: 700; }
+
+  /* CHECKBOXEN */
+  .check-groep { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+  .check-item { display: flex; align-items: center; gap: 6px; background: #f5f5f5; border-radius: 8px; padding: 7px 12px; cursor: pointer; font-size: 13px; border: 1.5px solid #eee; transition: all 0.15s; }
+  .check-item input { accent-color: #2B579A; width: 16px; height: 16px; cursor: pointer; }
+  .check-item:has(input:checked) { background: #E6F1FB; border-color: #85B7EB; }
+
+  /* RADIO KEUZE */
+  .radio-keuze { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
+  .radio-optie { flex: 1; min-width: 160px; border: 2px solid #eee; border-radius: 12px; padding: 16px; cursor: pointer; text-align: center; transition: all 0.15s; }
+  .radio-optie input { display: none; }
+  .radio-optie:has(input:checked) { border-color: #2B579A; background: #E6F1FB; }
+  .radio-optie .emoji { font-size: 32px; display: block; margin-bottom: 6px; }
+  .radio-optie .titel { font-size: 13px; font-weight: 700; }
+  .radio-optie .sub { font-size: 11px; color: #888; margin-top: 2px; }
+
+  /* TALENTEN */
+  .talent-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+  .talent-kaart { background: #fafafa; border: 1.5px solid #eee; border-radius: 12px; padding: 14px; }
+  .talent-naam { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+  .talent-omschrijving { font-size: 11px; color: #888; margin-bottom: 10px; line-height: 1.4; }
+  .talent-balk { display: flex; gap: 5px; }
+  .talent-stap { flex: 1; height: 20px; border-radius: 4px; background: #E8EAF0; cursor: pointer; transition: background 0.2s; border: 1px solid transparent; }
+  .talent-stap:hover { opacity: 0.8; }
+  .talent-stap.actief { background: #2B579A; }
+  .talent-icoon { font-size: 24px; margin-bottom: 8px; }
+
+  /* INFO BOX */
+  .info-box { background: #E6F1FB; border-left: 4px solid #3A82D0; border-radius: 8px; padding: 12px 16px; font-size: 13px; color: #0C447C; margin-bottom: 20px; line-height: 1.5; }
+
+  /* FINALITEIT LEGENDA */
+  .finaliteit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .finaliteit-kaart { border-radius: 10px; padding: 14px; font-size: 13px; }
+  .finaliteit-kaart .fin-titel { font-weight: 700; margin-bottom: 4px; }
+  .finaliteit-kaart .fin-sub { font-size: 11px; opacity: 0.85; }
+  .fin-a { background: #FEF3E8; color: #633806; }
+  .fin-da { background: #F3E8FD; color: #4A1A7A; }
+  .fin-d { background: #E8F0FE; color: #1A3A8A; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html">← Terug</a>
+  <span class="sep">|</span>
+  <span style="font-size:13px;color:#666;">Ingelogd als: <strong id="nav-naam">—</strong> (<span id="nav-klas">—</span>)</span>
+</nav>
+
+<!-- NAAM INVOER -->
+<div style="max-width:860px;margin:20px auto 0;padding:0 16px;">
+  <div style="background:white;border-radius:12px;padding:16px 20px;box-shadow:0 1px 4px rgba(0,0,0,0.08);display:flex;gap:16px;flex-wrap:wrap;align-items:center;">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <label style="font-size:13px;font-weight:600;color:#444;">Naam:</label>
+      <input type="text" id="leerling-naam" placeholder="Jouw naam…" style="border:1.5px solid #ddd;border-radius:8px;padding:8px 12px;font-size:14px;font-family:inherit;outline:none;min-width:160px;">
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <label style="font-size:13px;font-weight:600;color:#444;">Klas:</label>
+      <select id="leerling-klas" style="border:1.5px solid #ddd;border-radius:8px;padding:8px 12px;font-size:14px;font-family:inherit;outline:none;background:#fafafa;min-width:140px;">
+        <option value="">— Kies klas —</option>
+        <option value="wit">Wit</option><option value="zwart">Zwart</option><option value="roze">Roze</option>
+        <option value="oranje">Oranje</option><option value="paars">Paars</option><option value="mint">Mint</option>
+        <option value="rood">Rood</option><option value="blauw">Blauw</option><option value="geel">Geel</option>
+        <option value="groen">Groen</option><option value="goud">Goud</option><option value="zilver">Zilver</option>
+      </select>
+    </div>
+    <div id="laad-status" style="font-size:12px;color:#aaa;"></div>
+  </div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab actief" onclick="toonSectie('tijdlijn')">🗓️ Mijn tijdlijn</div>
+  <div class="tab" onclick="toonSectie('onderwijs')">🏫 Onderwijs in Vlaanderen</div>
+  <div class="tab" onclick="toonSectie('wiebenik')">👤 Wie ben ik?</div>
+  <div class="tab" onclick="toonSectie('watikhword')">🌟 Wat wil ik worden?</div>
+  <div class="tab" onclick="toonSectie('hoeleerik')">📖 Hoe leer ik?</div>
+  <div class="tab" onclick="toonSectie('talenten')">💪 Mijn talenten</div>
+</div>
+
+<!-- 1. TIJDLIJN -->
+<div class="sectie actief" id="s-tijdlijn">
+  <div class="kaart">
+    <h2>🗓️ Mijn tijdlijn in OKAN</h2>
+    <p class="subtitel">Vul de datum in wanneer je elke fase begon.</p>
+    <div class="tijdlijn">
+      <div class="tijdlijn-stap">
+        <div class="tijdlijn-cirkel stap-alfa">🧠</div>
+        <div class="tijdlijn-label">Alfa</div>
+        <div class="tijdlijn-datum"><input type="text" id="datum-alfa" placeholder="dd/mm/jjjj"></div>
+      </div>
+      <div class="tijdlijn-pijl">→</div>
+      <div class="tijdlijn-stap">
+        <div class="tijdlijn-cirkel stap-in">👋</div>
+        <div class="tijdlijn-label">Instroom</div>
+        <div class="tijdlijn-datum"><input type="text" id="datum-instroom" placeholder="dd/mm/jjjj"></div>
+      </div>
+      <div class="tijdlijn-pijl">→</div>
+      <div class="tijdlijn-stap">
+        <div class="tijdlijn-cirkel stap-uit">📖</div>
+        <div class="tijdlijn-label">Uitstroom</div>
+        <div class="tijdlijn-datum"><input type="text" id="datum-uitstroom" placeholder="dd/mm/jjjj"></div>
+      </div>
+      <div class="tijdlijn-pijl">→</div>
+      <div class="tijdlijn-stap">
+        <div class="tijdlijn-cirkel stap-snuffel">🚀</div>
+        <div class="tijdlijn-label" style="text-align:center">Snuffelstage/<br>Flextraject</div>
+        <div class="tijdlijn-datum"><input type="text" id="datum-snuffel" placeholder="dd/mm/jjjj"></div>
+      </div>
+      <div class="tijdlijn-pijl">→</div>
+      <div class="tijdlijn-stap">
+        <div class="tijdlijn-cirkel stap-nieuw">🏁</div>
+        <div class="tijdlijn-label" style="text-align:center">Start Nieuwe<br>School</div>
+        <div class="tijdlijn-datum"><input type="text" id="datum-nieuw" placeholder="dd/mm/jjjj"></div>
+      </div>
+    </div>
+    <div class="opslaan-balk">
+      <button class="opslaan-knop" onclick="opslaan('tijdlijn')">💾 Opslaan</button>
+      <span class="opslaan-bev" id="bev-tijdlijn">✅ Opgeslagen!</span>
+    </div>
+  </div>
+</div>
+
+<!-- 2. ONDERWIJS IN VLAANDEREN -->
+<div class="sectie" id="s-onderwijs">
+  <div class="kaart">
+    <h2>🏫 Onderwijs in Vlaanderen</h2>
+    <p class="subtitel">Dit is hoe het onderwijs in België is opgebouwd.</p>
+
+    <div class="info-box">In België is school verplicht vanaf 5-6 jaar (kleuterschool) tot 18 jaar (secundair onderwijs).</div>
+
+    <h3 style="font-size:14px;font-weight:700;margin-bottom:12px;color:#1A3A6B;">📋 Onderwijskwalificaties</h3>
+    <table class="ok-tabel">
+      <tr><th>Niveau</th><th>Opleiding</th></tr>
+      <tr><td><span class="ok-badge">OK 1</span></td><td>1e graad secundair</td></tr>
+      <tr><td><span class="ok-badge">OK 2</span></td><td>2e graad secundair</td></tr>
+      <tr><td><span class="ok-badge">OK 3</span></td><td>3e graad Arbeidsmarktfinaliteit</td></tr>
+      <tr><td><span class="ok-badge">OK 4</span></td><td>3e graad Dubbele- en Doorstroomfinaliteit</td></tr>
+      <tr><td><span class="ok-badge">OK 5</span></td><td>Graduaat (vroegere HBO5)</td></tr>
+      <tr><td><span class="ok-badge">OK 6</span></td><td>Bachelor</td></tr>
+      <tr><td><span class="ok-badge">OK 7</span></td><td>Master</td></tr>
+      <tr><td><span class="ok-badge">OK 8</span></td><td>Doctoraat</td></tr>
+    </table>
+
+    <h3 style="font-size:14px;font-weight:700;margin:24px 0 12px;color:#1A7A8A;">🎒 Schoolplicht per leeftijd</h3>
+    <table class="leeftijd-tabel">
+      <tr><th>Leeftijd</th><th>School</th><th>Verplicht?</th></tr>
+      <tr><td>0–2,5 jaar</td><td>Kinderopvang / crèche</td><td class="nee">Nee</td></tr>
+      <tr><td>2,5–5 jaar</td><td>Kleuterschool</td><td class="nee">Nee</td></tr>
+      <tr><td>5–6 jaar</td><td>Kleuterschool</td><td class="ja">Ja</td></tr>
+      <tr><td>6–12 jaar</td><td>Primair onderwijs / Lagere school</td><td class="ja">Ja</td></tr>
+      <tr><td>12–18 jaar</td><td>Secundair onderwijs / Middelbaar</td><td class="ja">Ja</td></tr>
+    </table>
+
+    <h3 style="font-size:14px;font-weight:700;margin:24px 0 12px;color:#333;">📚 Finaliteiten in het secundair onderwijs</h3>
+    <div class="finaliteit-grid">
+      <div class="finaliteit-kaart fin-a">
+        <div class="fin-titel">A: Arbeidsmarktfinaliteit</div>
+        <div class="fin-sub">Praktijk 50% · Technisch 25% · AV 25%<br>→ Rechtstreeks naar de arbeidsmarkt</div>
+      </div>
+      <div class="finaliteit-kaart fin-da">
+        <div class="fin-titel">D/A: Dubbele finaliteit</div>
+        <div class="fin-sub">Praktijk 33% · Technisch 33% · AV 33%<br>→ Arbeidsmarkt of hoger onderwijs</div>
+      </div>
+      <div class="finaliteit-kaart fin-d">
+        <div class="fin-titel">D: Doorstroomfinaliteit</div>
+        <div class="fin-sub">AV 100%<br>→ Hoger onderwijs (Bachelor/Master)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. WIE BEN IK? -->
+<div class="sectie" id="s-wiebenik">
+  <div class="kaart">
+    <h2>👤 Wie ben ik?</h2>
+    <p class="subtitel">Vertel iets over jezelf. Jij en je leerkracht kunnen dit lezen.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div class="veld-groep">
+        <label>Wat is je naam?</label>
+        <input type="text" id="wbi-naam" placeholder="Jouw naam…">
+      </div>
+      <div class="veld-groep">
+        <label>Hoe oud ben je?</label>
+        <input type="text" id="wbi-leeftijd" placeholder="Jouw leeftijd…">
+      </div>
+      <div class="veld-groep">
+        <label>Waar besteed je de meeste tijd aan?</label>
+        <textarea id="wbi-tijd" rows="3" placeholder="Bijv. sport, muziek, vrienden…"></textarea>
+      </div>
+      <div class="veld-groep">
+        <label>Wat vind je leuk op school?</label>
+        <textarea id="wbi-school" rows="3" placeholder="Bijv. tekenen, rekenen…"></textarea>
+      </div>
+      <div class="veld-groep">
+        <label>Welk voorwerp gebruik je het meest?</label>
+        <textarea id="wbi-voorwerp" rows="3" placeholder="Bijv. telefoon, pen…"></textarea>
+      </div>
+      <div class="veld-groep">
+        <label>Wie is een belangrijk persoon voor je?</label>
+        <input type="text" id="wbi-persoon" placeholder="Naam of relatie…">
+      </div>
+      <div class="veld-groep">
+        <label>Wat is je favoriete plek?</label>
+        <input type="text" id="wbi-plek" placeholder="Bijv. thuis, park…">
+      </div>
+    </div>
+    <div class="opslaan-balk">
+      <button class="opslaan-knop" onclick="opslaan('wiebenik')">💾 Opslaan</button>
+      <span class="opslaan-bev" id="bev-wiebenik">✅ Opgeslagen!</span>
+    </div>
+  </div>
+</div>
+
+<!-- 4. WAT WIL IK WORDEN? -->
+<div class="sectie" id="s-watikhword">
+  <div class="kaart">
+    <h2>🌟 Wat wil ik worden?</h2>
+    <p class="subtitel">Jouw wensberoep en dromen. Jij en je leerkracht kunnen dit lezen.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div class="veld-groep">
+        <label>Toen ik klein was wilde ik graag worden…</label>
+        <textarea id="wiw-kind" rows="2" placeholder="Mijn kinderdroom…"></textarea>
+      </div>
+      <div class="veld-groep">
+        <label>Later wil ik geen … worden</label>
+        <textarea id="wiw-niet" rows="2" placeholder="Dit wil ik zeker niet…"></textarea>
+      </div>
+      <div class="veld-groep">
+        <label>Ik weet veel over…</label>
+        <textarea id="wiw-kennis" rows="2" placeholder="Waar weet jij veel van?"></textarea>
+      </div>
+      <div class="veld-groep">
+        <label>Mijn wensberoep is…</label>
+        <input type="text" id="wiw-beroep" placeholder="Mijn droomjob…">
+      </div>
+      <div class="veld-groep">
+        <label>Ik kan heel goed…</label>
+        <textarea id="wiw-goed" rows="2" placeholder="Mijn sterkste punt…"></textarea>
+      </div>
+      <div class="veld-groep">
+        <label>De leukste les op school vind ik…</label>
+        <textarea id="wiw-les" rows="2" placeholder="Mijn favoriete vak…"></textarea>
+      </div>
+    </div>
+    <div class="opslaan-balk">
+      <button class="opslaan-knop" onclick="opslaan('watikhword')">💾 Opslaan</button>
+      <span class="opslaan-bev" id="bev-watikhword">✅ Opgeslagen!</span>
+    </div>
+  </div>
+</div>
+
+<!-- 5. HOE LEER IK? -->
+<div class="sectie" id="s-hoeleerik">
+  <div class="kaart">
+    <h2>📖 Hoe leer ik?</h2>
+    <p class="subtitel">Kies wat het beste bij jou past.</p>
+
+    <div class="veld-groep">
+      <label>Manier van leren</label>
+      <div class="radio-keuze">
+        <label class="radio-optie">
+          <input type="radio" name="leerwijze" id="leer-doen" value="doen">
+          <span class="emoji">🛠️</span>
+          <div class="titel">Al doende leren</div>
+          <div class="sub">Ik leer het beste door dingen zelf te doen</div>
+        </label>
+        <label class="radio-optie">
+          <input type="radio" name="leerwijze" id="leer-boek" value="boek">
+          <span class="emoji">📚</span>
+          <div class="titel">Uit boeken leren</div>
+          <div class="sub">Ik leer het beste door te lezen en te studeren</div>
+        </label>
+        <label class="radio-optie">
+          <input type="radio" name="leerwijze" id="leer-beide" value="beide">
+          <span class="emoji">⚖️</span>
+          <div class="titel">Beide</div>
+          <div class="sub">Ik leer goed op beide manieren</div>
+        </label>
+      </div>
+    </div>
+
+    <div class="veld-groep" style="margin-top:20px;">
+      <label>Studiehouding</label>
+      <div class="radio-keuze">
+        <label class="radio-optie">
+          <input type="radio" name="studiehouding" id="studie-graag" value="graag">
+          <span class="emoji">😊</span>
+          <div class="titel">Graag studeren</div>
+          <div class="sub">Ik studeer graag en ben gemotiveerd</div>
+        </label>
+        <label class="radio-optie">
+          <input type="radio" name="studiehouding" id="studie-mindergraag" value="mindergraag">
+          <span class="emoji">😐</span>
+          <div class="titel">Minder graag studeren</div>
+          <div class="sub">Studeren is soms moeilijk voor mij</div>
+        </label>
+      </div>
+    </div>
+
+    <div class="veld-groep" style="margin-top:20px;">
+      <label>Wat helpt mij om beter te leren? (meerdere keuzes mogelijk)</label>
+      <div class="check-groep">
+        <label class="check-item"><input type="checkbox" id="help-rust"> Rustige omgeving</label>
+        <label class="check-item"><input type="checkbox" id="help-muziek"> Muziek</label>
+        <label class="check-item"><input type="checkbox" id="help-herhalen"> Herhalen</label>
+        <label class="check-item"><input type="checkbox" id="help-uitleggen"> Uitleggen aan anderen</label>
+        <label class="check-item"><input type="checkbox" id="help-plaatjes"> Plaatjes/schema's</label>
+        <label class="check-item"><input type="checkbox" id="help-pauzes"> Korte pauzes</label>
+      </div>
+    </div>
+
+    <div class="veld-groep">
+      <label>Nog iets anders dat helpt?</label>
+      <input type="text" id="leer-extra" placeholder="Vul hier in…">
+    </div>
+
+    <div class="opslaan-balk">
+      <button class="opslaan-knop" onclick="opslaan('hoeleerik')">💾 Opslaan</button>
+      <span class="opslaan-bev" id="bev-hoeleerik">✅ Opgeslagen!</span>
+    </div>
+  </div>
+</div>
+
+<!-- 6. MIJN TALENTEN -->
+<div class="sectie" id="s-talenten">
+  <div class="kaart">
+    <h2>💪 Mijn talenten</h2>
+    <p class="subtitel">Kleur in hoeveel je dit talent al hebt: 1 blokje = ik weet het niet, 5 blokjes = dit is mijn toptalent.</p>
+    <div class="talent-grid" id="talent-grid"></div>
+    <div class="opslaan-balk">
+      <button class="opslaan-knop" onclick="opslaan('talenten')">💾 Opslaan</button>
+      <span class="opslaan-bev" id="bev-talenten">✅ Opgeslagen!</span>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD8o-_FR2mvEciuxDgkfY__XRF_VtAZwUM",
+  authDomain: "okan-leerdoelen.firebaseapp.com",
+  projectId: "okan-leerdoelen",
+  storageBucket: "okan-leerdoelen.firebasestorage.app",
+  messagingSenderId: "767763105714",
+  appId: "1:767763105714:web:4a79429a484b22a30d06ab"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// TALENTEN DEFINITIE
+const talenten = [
+  { id:"zelfstandig", naam:"Zelfstandig", icoon:"🧍", omschrijving:"Ik kan alleen iets maken of doen." },
+  { id:"initiatief", naam:"Initiatief nemen", icoon:"💡", omschrijving:"Ik durf beslissingen nemen en tot actie overgaan." },
+  { id:"doorzetting", naam:"Doorzettingsvermogen", icoon:"🏁", omschrijving:"Ik houd vol tot iets af is, ook als het niet meteen lukt." },
+  { id:"planmatig", naam:"Planmatig", icoon:"📋", omschrijving:"Ik kan taken stap voor stap plannen en uitvoeren." },
+  { id:"flexibel", naam:"Flexibel", icoon:"🔄", omschrijving:"Ik kan omgaan met verandering." },
+  { id:"technisch", naam:"Technisch inzicht", icoon:"⚙️", omschrijving:"Ik begrijp hoe dingen werken en in elkaar zitten." },
+  { id:"veilig", naam:"Veilig", icoon:"🦺", omschrijving:"Ik werk voorzichtig en kan gevaar inschatten." },
+  { id:"zorgzaam", naam:"Zorgzaam", icoon:"🤗", omschrijving:"Ik draag zorg voor het milieu, mensen en materiaal." },
+  { id:"sociaal", naam:"Sociaal", icoon:"👥", omschrijving:"Ik doe graag dingen samen met anderen." },
+  { id:"leiderschap", naam:"Leiderschap", icoon:"🎯", omschrijving:"Ik neem vaak de leiding in een groep." },
+  { id:"digitaal", naam:"Digitaal inzicht", icoon:"💻", omschrijving:"Ik ben goed met technologie en media." },
+  { id:"handig", naam:"Handig", icoon:"🛠️", omschrijving:"Ik werk vlot met mijn handen en gereedschappen." },
+  { id:"actief", naam:"Actief", icoon:"🏃", omschrijving:"Ik beweeg graag en werk liefst rechtstaan." },
+  { id:"ruimtelijk", naam:"Ruimtelijk inzicht", icoon:"📐", omschrijving:"Ik kan goed puzzelen en afmetingen inschatten." },
+  { id:"wiskundig", naam:"Wiskundig", icoon:"🔢", omschrijving:"Ik ben graag met cijfers bezig." },
+  { id:"communicatief", naam:"Communicatief", icoon:"🗣️", omschrijving:"Ik spreek en luister graag en wissel ideeën uit." },
+  { id:"leergierig", naam:"Leergierig", icoon:"🔍", omschrijving:"Ik leer graag nieuwe dingen en onderzoek hoe iets in elkaar zit." },
+  { id:"talig", naam:"Talig", icoon:"📝", omschrijving:"Ik ben goed bezig met woorden." },
+  { id:"creatief", naam:"Creatief", icoon:"🎨", omschrijving:"Ik heb veel ideeën en maak graag mooie dingen." },
+  { id:"nauwkeurig", naam:"Nauwkeurig", icoon:"🔬", omschrijving:"Ik werk precies en heb oog voor detail." },
+  { id:"probleemoplossend", naam:"Probleemoplossend", icoon:"🧩", omschrijving:"Ik bedenk oplossingen bij moeilijke situaties." },
+  { id:"kritisch", naam:"Kritisch", icoon:"✅", omschrijving:"Ik controleer of alles goed verloopt, ook achteraf." },
+  { id:"zelfkennis", naam:"Zelfkennis", icoon:"🪞", omschrijving:"Ik weet wie ik ben en wat ik wil bereiken." },
+];
+
+// Bouw talentenkaarten
+const grid = document.getElementById('talent-grid');
+talenten.forEach(t => {
+  const kaart = document.createElement('div');
+  kaart.className = 'talent-kaart';
+  kaart.innerHTML = `
+    <div class="talent-icoon">${t.icoon}</div>
+    <div class="talent-naam">${t.naam}</div>
+    <div class="talent-omschrijving">${t.omschrijving}</div>
+    <div class="talent-balk" id="tbalk-${t.id}">
+      ${[1,2,3,4,5].map(i => `<div class="talent-stap" id="tstap-${t.id}-${i}" onclick="klikTalent('${t.id}',${i})"></div>`).join('')}
+    </div>`;
+  grid.appendChild(kaart);
+});
+
+window.klikTalent = function(id, val) {
+  for (let i=1;i<=5;i++) {
+    document.getElementById(`tstap-${id}-${i}`).classList.toggle('actief', i<=val);
+  }
+};
+
+function getTalentWaarde(id) {
+  for (let i=5;i>=1;i--) {
+    if (document.getElementById(`tstap-${id}-${i}`)?.classList.contains('actief')) return i;
+  }
+  return 0;
+}
+
+function setTalentWaarde(id, val) {
+  for (let i=1;i<=5;i++) {
+    document.getElementById(`tstap-${id}-${i}`)?.classList.toggle('actief', i<=val);
+  }
+}
+
+// Tabs
+window.toonSectie = function(id) {
+  document.querySelectorAll('.sectie').forEach(s => s.classList.remove('actief'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('actief'));
+  document.getElementById('s-'+id).classList.add('actief');
+  event.target.classList.add('actief');
+};
+
+// Naam/klas beheer
+function getNaam() { return document.getElementById('leerling-naam').value.trim(); }
+function getKlas() { return document.getElementById('leerling-klas').value; }
+
+function setStatus(msg) { document.getElementById('laad-status').textContent = msg; }
+
+async function laadData() {
+  const naam = getNaam(); const klas = getKlas();
+  if (!naam || !klas) return;
+  document.getElementById('nav-naam').textContent = naam;
+  document.getElementById('nav-klas').textContent = klas;
+  setStatus('⏳ Laden…');
+  try {
+    const ref = doc(db, 'klassen', klas, 'toekomst', naam);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) { setStatus('Geen opgeslagen data gevonden.'); return; }
+    const d = snap.data();
+
+    // Tijdlijn
+    if (d.tijdlijn) {
+      ['alfa','instroom','uitstroom','snuffel','nieuw'].forEach(k => {
+        const el = document.getElementById('datum-'+k);
+        if (el && d.tijdlijn[k]) el.value = d.tijdlijn[k];
+      });
+    }
+    // Wie ben ik
+    if (d.wiebenik) {
+      ['naam','leeftijd','tijd','school','voorwerp','persoon','plek'].forEach(k => {
+        const el = document.getElementById('wbi-'+k);
+        if (el && d.wiebenik[k] !== undefined) el.value = d.wiebenik[k];
+      });
+    }
+    // Wat wil ik worden
+    if (d.watikhword) {
+      ['kind','niet','kennis','beroep','goed','les'].forEach(k => {
+        const el = document.getElementById('wiw-'+k);
+        if (el && d.watikhword[k] !== undefined) el.value = d.watikhword[k];
+      });
+    }
+    // Hoe leer ik
+    if (d.hoeleerik) {
+      if (d.hoeleerik.leerwijze) {
+        const el = document.getElementById('leer-'+d.hoeleerik.leerwijze);
+        if (el) el.checked = true;
+      }
+      if (d.hoeleerik.studiehouding) {
+        const el = document.getElementById('studie-'+d.hoeleerik.studiehouding);
+        if (el) el.checked = true;
+      }
+      ['rust','muziek','herhalen','uitleggen','plaatjes','pauzes'].forEach(k => {
+        const el = document.getElementById('help-'+k);
+        if (el) el.checked = !!d.hoeleerik['help_'+k];
+      });
+      const extra = document.getElementById('leer-extra');
+      if (extra && d.hoeleerik.extra) extra.value = d.hoeleerik.extra;
+    }
+    // Talenten
+    if (d.talenten) {
+      talenten.forEach(t => {
+        if (d.talenten[t.id] !== undefined) setTalentWaarde(t.id, d.talenten[t.id]);
+      });
+    }
+    setStatus('✅ Geladen.');
+    setTimeout(() => setStatus(''), 2000);
+  } catch(e) { setStatus('⚠️ Kon data niet laden.'); }
+}
+
+window.opslaan = async function(sectie) {
+  const naam = getNaam(); const klas = getKlas();
+  if (!naam || !klas) { alert('Vul eerst je naam en klas in.'); return; }
+  const knopId = 'bev-'+sectie;
+  let data = {};
+
+  if (sectie === 'tijdlijn') {
+    data.tijdlijn = { alfa: document.getElementById('datum-alfa').value, instroom: document.getElementById('datum-instroom').value, uitstroom: document.getElementById('datum-uitstroom').value, snuffel: document.getElementById('datum-snuffel').value, nieuw: document.getElementById('datum-nieuw').value };
+  } else if (sectie === 'wiebenik') {
+    data.wiebenik = {};
+    ['naam','leeftijd','tijd','school','voorwerp','persoon','plek'].forEach(k => {
+      data.wiebenik[k] = document.getElementById('wbi-'+k)?.value || '';
+    });
+  } else if (sectie === 'watikhword') {
+    data.watikhword = {};
+    ['kind','niet','kennis','beroep','goed','les'].forEach(k => {
+      data.watikhword[k] = document.getElementById('wiw-'+k)?.value || '';
+    });
+  } else if (sectie === 'hoeleerik') {
+    const leerwijze = document.querySelector('input[name="leerwijze"]:checked')?.value || '';
+    const studiehouding = document.querySelector('input[name="studiehouding"]:checked')?.value || '';
+    data.hoeleerik = { leerwijze, studiehouding, extra: document.getElementById('leer-extra')?.value || '' };
+    ['rust','muziek','herhalen','uitleggen','plaatjes','pauzes'].forEach(k => {
+      data.hoeleerik['help_'+k] = document.getElementById('help-'+k)?.checked || false;
+    });
+  } else if (sectie === 'talenten') {
+    data.talenten = {};
+    talenten.forEach(t => { data.talenten[t.id] = getTalentWaarde(t.id); });
+  }
+
+  try {
+    const ref = doc(db, 'klassen', klas, 'toekomst', naam);
+    await setDoc(ref, data, { merge: true });
+    const bev = document.getElementById(knopId);
+    bev.style.display = 'inline'; setTimeout(() => bev.style.display='none', 3000);
+  } catch(e) { alert('Opslaan mislukt. Controleer je internetverbinding.'); }
+};
+
+document.getElementById('leerling-naam').addEventListener('change', laadData);
+document.getElementById('leerling-klas').addEventListener('change', laadData);
+</script>
+</body>
+</html>

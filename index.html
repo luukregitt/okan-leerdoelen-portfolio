@@ -15,23 +15,25 @@
     justify-content: center;
     padding: 24px;
   }
-  .container { max-width: 480px; width: 100%; text-align: center; }
+  .container { max-width: 500px; width: 100%; text-align: center; }
   .logo { font-size: 48px; margin-bottom: 16px; }
   h1 { font-size: 24px; font-weight: 700; color: #1a1a1a; margin-bottom: 6px; }
-  p { font-size: 14px; color: #666; margin-bottom: 40px; }
+  .subtitel { font-size: 14px; color: #666; margin-bottom: 32px; }
 
-  .knoppen { display: flex; flex-direction: column; gap: 16px; }
+  .sectie-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #aaa; margin-bottom: 10px; text-align: left; }
+
+  .knoppen { display: flex; flex-direction: column; gap: 12px; margin-bottom: 28px; }
 
   .knop {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 18px;
     background: white;
     border: none;
-    border-radius: 16px;
-    padding: 24px 28px;
+    border-radius: 14px;
+    padding: 20px 24px;
     text-decoration: none;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.09);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     transition: transform 0.15s, box-shadow 0.15s;
     cursor: pointer;
     border-left: 6px solid;
@@ -39,46 +41,61 @@
   }
   .knop:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.13); }
 
-  .knop-leerling { border-color: #4A90D9; }
-  .knop-leerkracht { border-color: #F5C400; }
+  .knop-leerdoelen  { border-color: #2B579A; }
+  .knop-toekomst    { border-color: #7C6FD4; }
+  .knop-leerkracht  { border-color: #F5C400; }
 
-  .knop-icoon { font-size: 36px; flex-shrink: 0; }
-  .knop-tekst {}
-  .knop-titel { font-size: 17px; font-weight: 700; color: #1a1a1a; margin-bottom: 3px; }
-  .knop-sub { font-size: 13px; color: #888; }
+  .knop-icoon { font-size: 32px; flex-shrink: 0; }
+  .knop-titel { font-size: 16px; font-weight: 700; color: #1a1a1a; margin-bottom: 2px; }
+  .knop-sub   { font-size: 12px; color: #888; }
+  .pijl { font-size: 18px; color: #ccc; margin-left: auto; flex-shrink: 0; }
 
-  .pijl { font-size: 20px; color: #ccc; margin-left: auto; flex-shrink: 0; }
+  .divider { border: none; border-top: 1px solid #e0e0e0; margin: 4px 0 16px; }
 
-  footer { margin-top: 40px; font-size: 12px; color: #bbb; }
+  footer { margin-top: 24px; font-size: 12px; color: #ccc; }
 </style>
 </head>
 <body>
 <div class="container">
   <div class="logo">📚</div>
-  <h1>OKAN Leerdoelen Portfolio</h1>
-  <p>Kies hieronder wie je bent om verder te gaan.</p>
+  <h1>OKAN Portfolio</h1>
+  <p class="subtitel">Kies een onderdeel om verder te gaan.</p>
 
+  <div class="sectie-label">Voor leerlingen</div>
   <div class="knoppen">
-    <a class="knop knop-leerling" href="okan_voortgang.html">
+    <a class="knop knop-leerdoelen" href="okan_voortgang.html">
       <span class="knop-icoon">🎒</span>
-      <div class="knop-tekst">
-        <div class="knop-titel">Ik ben een leerling</div>
-        <div class="knop-sub">Bekijk en sla je voortgang op</div>
+      <div>
+        <div class="knop-titel">Mijn leerdoelen</div>
+        <div class="knop-sub">Bekijk en sla je voortgang per leerdoel op</div>
       </div>
       <span class="pijl">→</span>
     </a>
 
-    <a class="knop knop-leerkracht" href="okan_leerkracht.html">
-      <span class="knop-icoon">🎓</span>
-      <div class="knop-tekst">
-        <div class="knop-titel">Ik ben een leerkracht</div>
-        <div class="knop-sub">Bekijk voortgang en geef feedback</div>
+    <a class="knop knop-toekomst" href="okan_toekomst.html">
+      <span class="knop-icoon">🌟</span>
+      <div>
+        <div class="knop-titel">Mijn toekomst</div>
+        <div class="knop-sub">Tijdlijn · Wie ben ik? · Talenten · Wensberoep</div>
       </div>
       <span class="pijl">→</span>
     </a>
   </div>
 
-  <footer>OKAN Leerdoelen Portfolio</footer>
+  <hr class="divider">
+  <div class="sectie-label">Voor leerkrachten</div>
+  <div class="knoppen">
+    <a class="knop knop-leerkracht" href="okan_leerkracht.html">
+      <span class="knop-icoon">🎓</span>
+      <div>
+        <div class="knop-titel">Leerkrachtenoverzicht</div>
+        <div class="knop-sub">Voortgang bekijken · Feedback geven · Per klas filteren</div>
+      </div>
+      <span class="pijl">→</span>
+    </a>
+  </div>
+
+  <footer>OKAN Portfolio</footer>
 </div>
 </body>
 </html>
