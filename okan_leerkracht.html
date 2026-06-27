@@ -3,148 +3,286 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OKAN Leerdoelen – Leerkracht</title>
+<title>Mijn Toekomst – OKAN Portfolio</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', Arial, sans-serif; background: #F0F2F5; color: #1a1a1a; padding: 24px 16px 48px; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #F0F2F5; color: #1a1a1a; padding: 0 0 60px; }
 
+  /* LOGIN */
   #login-scherm { display: flex; align-items: center; justify-content: center; min-height: 80vh; }
-  .login-kaart { background: white; border-radius: 16px; padding: 40px 36px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); max-width: 360px; width: 100%; text-align: center; }
-  .login-kaart h1 { font-size: 20px; margin-bottom: 6px; }
-  .login-kaart p { font-size: 13px; color: #666; margin-bottom: 24px; }
-  .login-kaart input { width: 100%; border: 1.5px solid #ddd; border-radius: 8px; padding: 10px 14px; font-size: 14px; font-family: inherit; outline: none; margin-bottom: 12px; }
-  .login-kaart input:focus { border-color: #4A90D9; }
-  .login-knop { width: 100%; background: #2B579A; color: white; border: none; border-radius: 8px; padding: 11px; font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; }
-  .login-knop:hover { background: #1E3F70; }
-  .login-fout { color: #e55; font-size: 13px; margin-top: 8px; display: none; }
+  .login-kaart { background: white; border-radius: 16px; padding: 36px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); max-width: 380px; width: 100%; }
+  .login-kaart h1 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+  .login-kaart .sub { font-size: 13px; color: #888; margin-bottom: 24px; }
+  .login-veld { margin-bottom: 14px; }
+  .login-veld label { font-size: 12px; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: 0.04em; display: block; margin-bottom: 5px; }
+  .login-veld input, .login-veld select { width: 100%; border: 1.5px solid #ddd; border-radius: 8px; padding: 9px 12px; font-size: 14px; font-family: inherit; outline: none; background: #fafafa; }
+  .login-knop { width: 100%; background: #7C6FD4; color: white; border: none; border-radius: 8px; padding: 11px; font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer; margin-top: 4px; }
+  .login-knop:hover { background: #5a4faa; }
+  .login-fout { color: #e55; font-size: 13px; margin-top: 10px; display: none; }
+  .pin-hint { font-size: 12px; color: #888; margin-top: 6px; }
 
+  /* NAV */
   #hoofd { display: none; }
-  header { max-width: 1000px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-  header h1 { font-size: 20px; font-weight: 700; }
-  .uitloggen { font-size: 12px; background: none; border: 1px solid #ccc; border-radius: 6px; padding: 5px 10px; cursor: pointer; color: #666; }
+  nav { background: white; box-shadow: 0 1px 4px rgba(0,0,0,0.09); padding: 12px 24px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; position: sticky; top: 0; z-index: 100; }
+  nav a { text-decoration: none; color: #7C6FD4; font-size: 13px; font-weight: 600; }
+  .uitloggen { font-size: 12px; background: none; border: 1px solid #ccc; border-radius: 6px; padding: 5px 10px; cursor: pointer; color: #666; margin-left: auto; }
 
-  .filters { max-width: 1000px; margin: 0 auto 20px; background: white; border-radius: 12px; padding: 16px 20px; display: flex; align-items: center; gap: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); flex-wrap: wrap; }
-  .filters label { font-size: 13px; font-weight: 600; color: #444; white-space: nowrap; }
-  .filters select { border: 1.5px solid #ddd; border-radius: 8px; padding: 8px 12px; font-size: 14px; font-family: inherit; outline: none; background: #fafafa; cursor: pointer; min-width: 150px; }
+  .tabs { max-width: 860px; margin: 20px auto 0; display: flex; gap: 8px; flex-wrap: wrap; padding: 0 16px; }
+  .tab { padding: 8px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; background: white; color: #666; border: 2px solid transparent; transition: all 0.15s; }
+  .tab:hover { background: #e8eaf0; }
+  .tab.actief { background: #7C6FD4; color: white; }
 
-  .status { max-width: 1000px; margin: 0 auto 10px; font-size: 12px; color: #888; min-height: 18px; }
-  #overzicht { max-width: 1000px; margin: 0 auto; }
-  .geen-data { text-align: center; color: #999; font-size: 14px; margin-top: 40px; }
+  .sectie { display: none; max-width: 860px; margin: 20px auto 0; padding: 0 16px; }
+  .sectie.actief { display: block; }
+  .kaart { background: white; border-radius: 16px; padding: 28px; box-shadow: 0 1px 6px rgba(0,0,0,0.08); margin-bottom: 20px; }
+  .kaart h2 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .kaart .subtitel { font-size: 13px; color: #888; margin-bottom: 20px; }
 
-  .samenvatting { max-width: 1000px; margin: 0 auto 20px; background: white; border-radius: 12px; padding: 16px 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); display: none; }
-  .samenvatting h2 { font-size: 14px; font-weight: 700; margin-bottom: 12px; }
-  .stat-rij { display: flex; gap: 12px; flex-wrap: wrap; }
-  .stat-blok { text-align: center; background: #F0F2F5; border-radius: 8px; padding: 10px 16px; flex: 1; min-width: 100px; }
-  .stat-getal { font-size: 22px; font-weight: 700; color: #2B579A; }
-  .stat-label { font-size: 11px; color: #888; margin-top: 2px; }
+  .opslaan-balk { display: flex; align-items: center; gap: 12px; margin-top: 24px; padding-top: 20px; border-top: 1px solid #eee; }
+  .opslaan-knop { background: #7C6FD4; color: white; border: none; border-radius: 8px; padding: 10px 22px; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; }
+  .opslaan-knop:hover { background: #5a4faa; }
+  .opslaan-bev { font-size: 13px; color: #2BAF84; font-weight: 600; display: none; }
 
-  /* LEERLING KAART */
-  .leerling-kaart { background: white; border-radius: 12px; padding: 0; margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); overflow: hidden; }
-  .leerling-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid #f0f0f0; }
-  .leerling-naam { font-size: 16px; font-weight: 700; }
-  .leerling-meta { font-size: 12px; color: #888; }
-  .klas-badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; background: #E8EAF0; color: #444; margin-left: 8px; }
-  .acties-rij { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-  .verwijder-knop { font-size: 12px; color: #e55; background: none; border: 1px solid #e55; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
-  .reset-pin-knop { font-size: 12px; color: #888; background: none; border: 1px solid #ddd; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
-  .reset-pin-knop:hover { background: #f5f5f5; }
+  .veld-groep { margin-bottom: 18px; }
+  .veld-groep label { font-size: 12px; font-weight: 700; color: #555; display: block; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .veld-groep input[type=text], .veld-groep textarea { width: 100%; border: 1.5px solid #ddd; border-radius: 8px; padding: 9px 12px; font-size: 14px; font-family: inherit; outline: none; background: #fafafa; resize: vertical; transition: border-color 0.2s; }
+  .veld-groep input:focus, .veld-groep textarea:focus { border-color: #7C6FD4; background: white; }
 
-  /* TABS PER LEERLING */
-  .leerling-tabs { display: flex; gap: 0; border-bottom: 1px solid #eee; }
-  .leerling-tab { padding: 10px 18px; font-size: 13px; font-weight: 600; cursor: pointer; color: #888; border-bottom: 3px solid transparent; transition: all 0.15s; background: none; border-top: none; border-left: none; border-right: none; font-family: inherit; }
-  .leerling-tab:hover { color: #333; }
-  .leerling-tab.actief { color: #2B579A; border-bottom-color: #2B579A; }
+  .tijdlijn { display: flex; align-items: flex-start; gap: 0; margin: 24px 0; overflow-x: auto; padding-bottom: 8px; }
+  .tijdlijn-stap { display: flex; flex-direction: column; align-items: center; min-width: 130px; }
+  .tijdlijn-cirkel { width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 28px; margin-bottom: 10px; border: 3px solid; }
+  .tijdlijn-label { font-size: 12px; font-weight: 700; text-align: center; margin-bottom: 6px; }
+  .tijdlijn-datum input { width: 110px; border: 1.5px solid #ddd; border-radius: 6px; padding: 5px 8px; font-size: 12px; font-family: inherit; text-align: center; background: #fafafa; outline: none; }
+  .tijdlijn-pijl { font-size: 24px; color: #ccc; margin-top: 22px; padding: 0 4px; }
+  .stap-alfa    { border-color: #3B3BA6; background: #EEEDFE; }
+  .stap-in      { border-color: #8B2FC9; background: #F3E8FD; }
+  .stap-uit     { border-color: #C9402F; background: #FDECEA; }
+  .stap-snuffel { border-color: #E07B20; background: #FEF3E8; }
+  .stap-nieuw   { border-color: #C92F7A; background: #FDEAF3; }
 
-  .leerling-inhoud { padding: 16px 20px; }
-  .leerling-panel { display: none; }
-  .leerling-panel.actief { display: block; }
+  .ok-tabel, .leeftijd-tabel { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+  .ok-tabel th { background: #1A3A6B; color: white; padding: 10px 14px; text-align: left; font-size: 13px; }
+  .ok-tabel td { padding: 9px 14px; font-size: 13px; border-bottom: 1px solid #eee; }
+  .ok-tabel tr:nth-child(even) td { background: #f0f4fa; }
+  .ok-badge { display: inline-block; background: #1A3A6B; color: white; border-radius: 4px; padding: 2px 8px; font-size: 12px; font-weight: 700; min-width: 44px; text-align: center; }
+  .leeftijd-tabel th { background: #1A7A8A; color: white; padding: 9px 14px; font-size: 13px; text-align: left; }
+  .leeftijd-tabel td { padding: 8px 14px; font-size: 13px; border-bottom: 1px solid #eee; }
+  .leeftijd-tabel tr:nth-child(even) td { background: #e8f7f9; }
+  .ja { color: #2BAF84; font-weight: 700; } .nee { color: #e55; font-weight: 700; }
 
-  /* LEERDOELEN IN LEERKRACHT */
-  .sectie-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin: 14px 0 6px; }
-  .sectie-label.cultuur { color:#3C3489; } .sectie-label.tijdruimte { color:#085041; }
-  .sectie-label.digitaal { color:#0C447C; } .sectie-label.techniek { color:#633806; }
-  .sectie-label.leer { color:#27500A; } .sectie-label.gods { color:#72243E; }
+  .radio-keuze { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 8px; }
+  .radio-optie { flex: 1; min-width: 140px; border: 2px solid #eee; border-radius: 12px; padding: 14px; cursor: pointer; text-align: center; transition: all 0.15s; }
+  .radio-optie input { display: none; }
+  .radio-optie:has(input:checked) { border-color: #7C6FD4; background: #EEEDFE; }
+  .radio-optie .emoji { font-size: 28px; display: block; margin-bottom: 6px; }
+  .radio-optie .titel { font-size: 13px; font-weight: 700; }
+  .radio-optie .sub { font-size: 11px; color: #888; margin-top: 2px; }
 
-  .leerdoel-rij { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
-  .leerdoel-naam { font-size: 12px; color: #555; flex: 1; min-width: 200px; }
-  .mini-balk { display: flex; gap: 3px; width: 100px; flex-shrink: 0; }
-  .mini-stap { flex: 1; height: 12px; border-radius: 3px; background: #E8EAF0; }
-  .mini-fase-select { font-family: inherit; font-size: 11px; border: 1.5px solid #ddd; border-radius: 6px; padding: 3px 6px; background: #fafafa; cursor: pointer; outline: none; }
-  .mini-fase-select:focus { border-color: #4A90D9; }
+  .check-groep { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+  .check-item { display: flex; align-items: center; gap: 6px; background: #f5f5f5; border-radius: 8px; padding: 7px 12px; cursor: pointer; font-size: 13px; border: 1.5px solid #eee; }
+  .check-item input { accent-color: #7C6FD4; width: 16px; height: 16px; cursor: pointer; }
+  .check-item:has(input:checked) { background: #EEEDFE; border-color: #AFA9EC; }
 
-  .cultuur-kleur { background:#7C6FD4; } .tijdruimte-kleur { background:#2BAF84; }
-  .digitaal-kleur { background:#3A82D0; } .techniek-kleur { background:#D4850A; }
-  .leer-kleur { background:#6BAA2A; } .gods-kleur { background:#C4527A; }
+  .talent-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; }
+  .talent-kaart { background: #fafafa; border: 1.5px solid #eee; border-radius: 12px; padding: 14px; }
+  .talent-naam { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+  .talent-omschrijving { font-size: 11px; color: #888; margin-bottom: 10px; line-height: 1.4; }
+  .talent-balk { display: flex; gap: 5px; }
+  .talent-stap { flex: 1; height: 20px; border-radius: 4px; background: #E8EAF0; cursor: pointer; transition: background 0.2s; }
+  .talent-stap.actief { background: #7C6FD4; }
+  .talent-icoon { font-size: 22px; margin-bottom: 8px; }
 
-  /* FEEDBACK */
-  .feedback-invoer { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 200px; }
-  .feedback-invoer textarea { flex: 1; font-family: inherit; font-size: 12px; border: 1.5px solid #ddd; border-radius: 8px; padding: 5px 8px; resize: vertical; min-height: 32px; outline: none; background: #FFFBEA; }
-  .feedback-invoer textarea:focus { border-color: #F5C400; }
-
-  .leerling-acties-onder { display: flex; justify-content: flex-start; align-items: center; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
-  .feedback-opslaan-knop { background: #F5C400; color: #333; border: none; border-radius: 8px; padding: 8px 18px; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; }
-  .feedback-opslaan-knop:hover { background: #d4a900; }
-  .opslaan-bev { font-size: 12px; color: #2BAF84; font-weight: 600; display: none; }
-
-  /* TOEKOMST WEERGAVE */
-  .toekomst-sectie { margin-bottom: 20px; }
-  .toekomst-sectie h4 { font-size: 13px; font-weight: 700; color: #555; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 6px; }
-  .toekomst-veld { display: flex; gap: 8px; margin-bottom: 8px; }
-  .toekomst-sleutel { font-size: 12px; font-weight: 600; color: #888; min-width: 180px; flex-shrink: 0; }
-  .toekomst-waarde { font-size: 12px; color: #333; }
-  .talent-rij { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-  .talent-naam-lk { font-size: 12px; color: #555; min-width: 160px; }
-  .talent-mini-balk { display: flex; gap: 3px; }
-  .talent-mini-stap { width: 18px; height: 12px; border-radius: 3px; background: #E8EAF0; }
-  .talent-mini-stap.actief { background: #7C6FD4; }
-  .tijdlijn-mini { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
-  .tijdlijn-item { background: #f0f0f0; border-radius: 6px; padding: 4px 10px; font-size: 12px; }
-  .tijdlijn-item strong { display: block; font-size: 11px; color: #888; }
+  .info-box { background: #EEEDFE; border-left: 4px solid #7C6FD4; border-radius: 8px; padding: 12px 16px; font-size: 13px; color: #3C3489; margin-bottom: 20px; line-height: 1.5; }
+  .finaliteit-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .finaliteit-kaart { border-radius: 10px; padding: 14px; }
+  .fin-titel { font-weight: 700; margin-bottom: 4px; font-size: 13px; }
+  .fin-sub { font-size: 11px; opacity: 0.85; }
+  .fin-a { background: #FEF3E8; color: #633806; } .fin-da { background: #F3E8FD; color: #4A1A7A; } .fin-d { background: #E8F0FE; color: #1A3A8A; }
 </style>
 </head>
 <body>
 
+<!-- LOGIN -->
 <div id="login-scherm">
   <div class="login-kaart">
-    <h1>🎓 Leerkrachtenpagina</h1>
-    <p>Voer het wachtwoord in om verder te gaan.</p>
-    <input type="password" id="wachtwoord-input" placeholder="Wachtwoord…" onkeydown="if(event.key==='Enter') controleerWachtwoord()">
-    <button class="login-knop" onclick="controleerWachtwoord()">Inloggen</button>
-    <p class="login-fout" id="login-fout">Ongeldig wachtwoord.</p>
+    <h1>🌟 Mijn toekomst</h1>
+    <p class="sub">Log in met je naam, klas en pincode.</p>
+    <div class="login-veld"><label>Naam</label><input type="text" id="in-naam" placeholder="Jouw volledige naam…"></div>
+    <div class="login-veld">
+      <label>Klas</label>
+      <select id="in-klas">
+        <option value="">— Kies klas —</option>
+        <option value="wit">Wit</option><option value="zwart">Zwart</option><option value="roze">Roze</option>
+        <option value="oranje">Oranje</option><option value="paars">Paars</option><option value="mint">Mint</option>
+        <option value="rood">Rood</option><option value="blauw">Blauw</option><option value="geel">Geel</option>
+        <option value="groen">Groen</option><option value="goud">Goud</option><option value="zilver">Zilver</option>
+      </select>
+    </div>
+    <div class="login-veld">
+      <label>Pincode (4 cijfers)</label>
+      <input type="password" id="in-pin" maxlength="4" placeholder="····" inputmode="numeric">
+      <p class="pin-hint">Gebruik dezelfde pincode als op de leerdoelenpagina.</p>
+    </div>
+    <button class="login-knop" onclick="inloggen()">Inloggen</button>
+    <p class="login-fout" id="login-fout">Verkeerde pincode. Probeer opnieuw.</p>
   </div>
 </div>
 
+<!-- HOOFD -->
 <div id="hoofd">
-  <header>
-    <div><h1>🎓 Leerkrachtenoverzicht – OKAN</h1><p style="font-size:13px;color:#666;">Voortgang · Toekomst · Feedback per leerling</p></div>
+  <nav>
+    <a href="index.html">← Terug</a>
+    <span style="font-size:13px;color:#666;">Ingelogd als <strong id="nav-naam"></strong> · <span id="nav-klas"></span></span>
     <button class="uitloggen" onclick="uitloggen()">↩ Uitloggen</button>
-  </header>
+  </nav>
 
-  <div class="filters">
-    <label>Klas:</label>
-    <select id="klas-filter" onchange="laadKlas()">
-      <option value="">— Kies een klas —</option>
-      <option value="wit">Wit</option><option value="zwart">Zwart</option><option value="roze">Roze</option>
-      <option value="oranje">Oranje</option><option value="paars">Paars</option><option value="mint">Mint</option>
-      <option value="rood">Rood</option><option value="blauw">Blauw</option><option value="geel">Geel</option>
-      <option value="groen">Groen</option><option value="goud">Goud</option><option value="zilver">Zilver</option>
-    </select>
-    <label>Leerling:</label>
-    <select id="leerling-filter" onchange="filterLeerling()"><option value="">— Alle leerlingen —</option></select>
+  <div class="tabs">
+    <div class="tab actief" onclick="toonSectie('tijdlijn',this)">🗓️ Mijn tijdlijn</div>
+    <div class="tab" onclick="toonSectie('onderwijs',this)">🏫 Onderwijs</div>
+    <div class="tab" onclick="toonSectie('wiebenik',this)">👤 Wie ben ik?</div>
+    <div class="tab" onclick="toonSectie('watikhword',this)">🌟 Wat wil ik worden?</div>
+    <div class="tab" onclick="toonSectie('hoeleerik',this)">📖 Hoe leer ik?</div>
+    <div class="tab" onclick="toonSectie('talenten',this)">💪 Mijn talenten</div>
   </div>
 
-  <div class="samenvatting" id="samenvatting">
-    <h2 id="samenvatting-titel">Klasoverzicht</h2>
-    <div class="stat-rij" id="stat-rij"></div>
+  <!-- TIJDLIJN -->
+  <div class="sectie actief" id="s-tijdlijn">
+    <div class="kaart">
+      <h2>🗓️ Mijn tijdlijn in OKAN</h2>
+      <p class="subtitel">Vul de datum in wanneer je elke fase begon.</p>
+      <div class="tijdlijn">
+        <div class="tijdlijn-stap"><div class="tijdlijn-cirkel stap-alfa">🧠</div><div class="tijdlijn-label">Alfa</div><div class="tijdlijn-datum"><input type="text" id="datum-alfa" placeholder="dd/mm/jjjj"></div></div>
+        <div class="tijdlijn-pijl">→</div>
+        <div class="tijdlijn-stap"><div class="tijdlijn-cirkel stap-in">👋</div><div class="tijdlijn-label">Instroom</div><div class="tijdlijn-datum"><input type="text" id="datum-instroom" placeholder="dd/mm/jjjj"></div></div>
+        <div class="tijdlijn-pijl">→</div>
+        <div class="tijdlijn-stap"><div class="tijdlijn-cirkel stap-uit">📖</div><div class="tijdlijn-label">Uitstroom</div><div class="tijdlijn-datum"><input type="text" id="datum-uitstroom" placeholder="dd/mm/jjjj"></div></div>
+        <div class="tijdlijn-pijl">→</div>
+        <div class="tijdlijn-stap"><div class="tijdlijn-cirkel stap-snuffel">🚀</div><div class="tijdlijn-label" style="text-align:center">Snuffelstage/<br>Flextraject</div><div class="tijdlijn-datum"><input type="text" id="datum-snuffel" placeholder="dd/mm/jjjj"></div></div>
+        <div class="tijdlijn-pijl">→</div>
+        <div class="tijdlijn-stap"><div class="tijdlijn-cirkel stap-nieuw">🏁</div><div class="tijdlijn-label" style="text-align:center">Start Nieuwe<br>School</div><div class="tijdlijn-datum"><input type="text" id="datum-nieuw" placeholder="dd/mm/jjjj"></div></div>
+      </div>
+      <div class="opslaan-balk"><button class="opslaan-knop" onclick="opslaan('tijdlijn')">💾 Opslaan</button><span class="opslaan-bev" id="bev-tijdlijn">✅ Opgeslagen!</span></div>
+    </div>
   </div>
 
-  <div class="status" id="status"></div>
-  <div id="overzicht"><p class="geen-data">Kies een klas om te beginnen.</p></div>
+  <!-- ONDERWIJS -->
+  <div class="sectie" id="s-onderwijs">
+    <div class="kaart">
+      <h2>🏫 Onderwijs in Vlaanderen</h2>
+      <p class="subtitel">Dit is hoe het onderwijs in België is opgebouwd.</p>
+      <div class="info-box">In België is school verplicht vanaf 5–6 jaar tot 18 jaar.</div>
+      <h3 style="font-size:14px;font-weight:700;margin-bottom:12px;color:#1A3A6B;">📋 Onderwijskwalificaties</h3>
+      <table class="ok-tabel">
+        <tr><th>Niveau</th><th>Opleiding</th></tr>
+        <tr><td><span class="ok-badge">OK 1</span></td><td>1e graad secundair</td></tr>
+        <tr><td><span class="ok-badge">OK 2</span></td><td>2e graad secundair</td></tr>
+        <tr><td><span class="ok-badge">OK 3</span></td><td>3e graad Arbeidsmarktfinaliteit</td></tr>
+        <tr><td><span class="ok-badge">OK 4</span></td><td>3e graad Dubbele- en Doorstroomfinaliteit</td></tr>
+        <tr><td><span class="ok-badge">OK 5</span></td><td>Graduaat (vroegere HBO5)</td></tr>
+        <tr><td><span class="ok-badge">OK 6</span></td><td>Bachelor</td></tr>
+        <tr><td><span class="ok-badge">OK 7</span></td><td>Master</td></tr>
+        <tr><td><span class="ok-badge">OK 8</span></td><td>Doctoraat</td></tr>
+      </table>
+      <h3 style="font-size:14px;font-weight:700;margin:20px 0 12px;color:#1A7A8A;">🎒 Schoolplicht per leeftijd</h3>
+      <table class="leeftijd-tabel">
+        <tr><th>Leeftijd</th><th>School</th><th>Verplicht?</th></tr>
+        <tr><td>0–2,5 jaar</td><td>Kinderopvang / crèche</td><td class="nee">Nee</td></tr>
+        <tr><td>2,5–5 jaar</td><td>Kleuterschool</td><td class="nee">Nee</td></tr>
+        <tr><td>5–6 jaar</td><td>Kleuterschool</td><td class="ja">Ja</td></tr>
+        <tr><td>6–12 jaar</td><td>Primair onderwijs / Lagere school</td><td class="ja">Ja</td></tr>
+        <tr><td>12–18 jaar</td><td>Secundair onderwijs / Middelbaar</td><td class="ja">Ja</td></tr>
+      </table>
+      <h3 style="font-size:14px;font-weight:700;margin:20px 0 12px;">📚 Finaliteiten</h3>
+      <div class="finaliteit-grid">
+        <div class="finaliteit-kaart fin-a"><div class="fin-titel">A: Arbeidsmarktfinaliteit</div><div class="fin-sub">Praktijk 50% · Tech 25% · AV 25% → Arbeidsmarkt</div></div>
+        <div class="finaliteit-kaart fin-da"><div class="fin-titel">D/A: Dubbele finaliteit</div><div class="fin-sub">Praktijk 33% · Tech 33% · AV 33% → Arbeidsmarkt of hoger onderwijs</div></div>
+        <div class="finaliteit-kaart fin-d"><div class="fin-titel">D: Doorstroomfinaliteit</div><div class="fin-sub">AV 100% → Hoger onderwijs</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WIE BEN IK -->
+  <div class="sectie" id="s-wiebenik">
+    <div class="kaart">
+      <h2>👤 Wie ben ik?</h2>
+      <p class="subtitel">Vertel iets over jezelf.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div class="veld-groep"><label>Wat is je naam?</label><input type="text" id="wbi-naam" placeholder="Jouw naam…"></div>
+        <div class="veld-groep"><label>Hoe oud ben je?</label><input type="text" id="wbi-leeftijd" placeholder="Jouw leeftijd…"></div>
+        <div class="veld-groep"><label>Waar besteed je de meeste tijd aan?</label><textarea id="wbi-tijd" rows="3" placeholder="Bijv. sport, muziek…"></textarea></div>
+        <div class="veld-groep"><label>Wat vind je leuk op school?</label><textarea id="wbi-school" rows="3" placeholder="Bijv. tekenen…"></textarea></div>
+        <div class="veld-groep"><label>Welk voorwerp gebruik je het meest?</label><textarea id="wbi-voorwerp" rows="3" placeholder="Bijv. telefoon…"></textarea></div>
+        <div class="veld-groep"><label>Wie is een belangrijk persoon voor je?</label><input type="text" id="wbi-persoon" placeholder="Naam of relatie…"></div>
+        <div class="veld-groep"><label>Wat is je favoriete plek?</label><input type="text" id="wbi-plek" placeholder="Bijv. thuis, park…"></div>
+      </div>
+      <div class="opslaan-balk"><button class="opslaan-knop" onclick="opslaan('wiebenik')">💾 Opslaan</button><span class="opslaan-bev" id="bev-wiebenik">✅ Opgeslagen!</span></div>
+    </div>
+  </div>
+
+  <!-- WAT WIL IK WORDEN -->
+  <div class="sectie" id="s-watikhword">
+    <div class="kaart">
+      <h2>🌟 Wat wil ik worden?</h2>
+      <p class="subtitel">Jouw wensberoep en dromen.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div class="veld-groep"><label>Toen ik klein was wilde ik graag worden…</label><textarea id="wiw-kind" rows="2" placeholder="Mijn kinderdroom…"></textarea></div>
+        <div class="veld-groep"><label>Later wil ik geen … worden</label><textarea id="wiw-niet" rows="2" placeholder="Dit wil ik zeker niet…"></textarea></div>
+        <div class="veld-groep"><label>Ik weet veel over…</label><textarea id="wiw-kennis" rows="2" placeholder="Waar weet jij veel van?"></textarea></div>
+        <div class="veld-groep"><label>Mijn wensberoep is…</label><input type="text" id="wiw-beroep" placeholder="Mijn droomjob…"></div>
+        <div class="veld-groep"><label>Ik kan heel goed…</label><textarea id="wiw-goed" rows="2" placeholder="Mijn sterkste punt…"></textarea></div>
+        <div class="veld-groep"><label>De leukste les op school vind ik…</label><textarea id="wiw-les" rows="2" placeholder="Mijn favoriete vak…"></textarea></div>
+      </div>
+      <div class="opslaan-balk"><button class="opslaan-knop" onclick="opslaan('watikhword')">💾 Opslaan</button><span class="opslaan-bev" id="bev-watikhword">✅ Opgeslagen!</span></div>
+    </div>
+  </div>
+
+  <!-- HOE LEER IK -->
+  <div class="sectie" id="s-hoeleerik">
+    <div class="kaart">
+      <h2>📖 Hoe leer ik?</h2>
+      <p class="subtitel">Kies wat het beste bij jou past.</p>
+      <div class="veld-groep"><label>Manier van leren</label>
+        <div class="radio-keuze">
+          <label class="radio-optie"><input type="radio" name="leerwijze" id="leer-doen" value="doen"><span class="emoji">🛠️</span><div class="titel">Al doende leren</div><div class="sub">Ik leer door dingen te doen</div></label>
+          <label class="radio-optie"><input type="radio" name="leerwijze" id="leer-boek" value="boek"><span class="emoji">📚</span><div class="titel">Uit boeken leren</div><div class="sub">Ik leer door te lezen en studeren</div></label>
+          <label class="radio-optie"><input type="radio" name="leerwijze" id="leer-beide" value="beide"><span class="emoji">⚖️</span><div class="titel">Beide</div><div class="sub">Ik leer op beide manieren</div></label>
+        </div>
+      </div>
+      <div class="veld-groep" style="margin-top:20px;"><label>Studiehouding</label>
+        <div class="radio-keuze">
+          <label class="radio-optie"><input type="radio" name="studiehouding" id="studie-graag" value="graag"><span class="emoji">😊</span><div class="titel">Graag studeren</div><div class="sub">Ik ben gemotiveerd</div></label>
+          <label class="radio-optie"><input type="radio" name="studiehouding" id="studie-mindergraag" value="mindergraag"><span class="emoji">😐</span><div class="titel">Minder graag</div><div class="sub">Studeren is soms moeilijk</div></label>
+        </div>
+      </div>
+      <div class="veld-groep" style="margin-top:20px;"><label>Wat helpt mij om beter te leren?</label>
+        <div class="check-groep">
+          <label class="check-item"><input type="checkbox" id="help-rust"> Rustige omgeving</label>
+          <label class="check-item"><input type="checkbox" id="help-muziek"> Muziek</label>
+          <label class="check-item"><input type="checkbox" id="help-herhalen"> Herhalen</label>
+          <label class="check-item"><input type="checkbox" id="help-uitleggen"> Uitleggen aan anderen</label>
+          <label class="check-item"><input type="checkbox" id="help-plaatjes"> Plaatjes/schema's</label>
+          <label class="check-item"><input type="checkbox" id="help-pauzes"> Korte pauzes</label>
+        </div>
+      </div>
+      <div class="veld-groep"><label>Nog iets anders dat helpt?</label><input type="text" id="leer-extra" placeholder="Vul hier in…"></div>
+      <div class="opslaan-balk"><button class="opslaan-knop" onclick="opslaan('hoeleerik')">💾 Opslaan</button><span class="opslaan-bev" id="bev-hoeleerik">✅ Opgeslagen!</span></div>
+    </div>
+  </div>
+
+  <!-- TALENTEN -->
+  <div class="sectie" id="s-talenten">
+    <div class="kaart">
+      <h2>💪 Mijn talenten</h2>
+      <p class="subtitel">Kleur in hoeveel je dit talent al hebt: 1 = ik weet het niet · 5 = dit is mijn toptalent</p>
+      <div class="talent-grid" id="talent-grid"></div>
+      <div class="opslaan-balk"><button class="opslaan-knop" onclick="opslaan('talenten')">💾 Opslaan</button><span class="opslaan-bev" id="bev-talenten">✅ Opgeslagen!</span></div>
+    </div>
+  </div>
 </div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs, deleteDoc, doc, updateDoc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyD8o-_FR2mvEciuxDgkfY__XRF_VtAZwUM",
@@ -157,284 +295,114 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const WACHTWOORD = "okan2025";
-
-window.controleerWachtwoord = function() {
-  if (document.getElementById('wachtwoord-input').value === WACHTWOORD) {
-    document.getElementById('login-scherm').style.display='none';
-    document.getElementById('hoofd').style.display='block';
-    sessionStorage.setItem('okan_auth','1');
-  } else { document.getElementById('login-fout').style.display='block'; }
-};
-window.uitloggen = function() { sessionStorage.removeItem('okan_auth'); document.getElementById('login-scherm').style.display='flex'; document.getElementById('hoofd').style.display='none'; document.getElementById('wachtwoord-input').value=''; };
-if (sessionStorage.getItem('okan_auth')==='1') { document.getElementById('login-scherm').style.display='none'; document.getElementById('hoofd').style.display='block'; }
-
-const FASE_LABELS = ["Nog niet begonnen","Fase 1","Fase 2","Fase 3","Fase 4","Fase 5"];
-
-const leerdoelen = [
-  {icoon:"🫀",  vaardigheid:"Cultuur",                             doel:"Ik leef gezond en netjes.",                                          klasse:"cultuur"},
-  {icoon:"🗣️", vaardigheid:"Cultuur",                             doel:"Ik geef mijn mening.",                                               klasse:"cultuur"},
-  {icoon:"🎨",  vaardigheid:"Cultuur",                             doel:"Ik maak een creatief product.",                                       klasse:"cultuur"},
-  {icoon:"🇧🇪",vaardigheid:"Cultuur",                             doel:"Ik gedraag me gepast in de Belgische samenleving.",                   klasse:"cultuur"},
-  {icoon:"🏙️", vaardigheid:"Cultuur",                             doel:"Ik gebruik de diensten in mijn stad.",                                klasse:"cultuur"},
-  {icoon:"🕰️🌍",vaardigheid:"Tijd en ruimte",                     doel:"Ik leg uit hoe mensen leven in verschillende tijden en plaatsen.",    klasse:"tijdruimte"},
-  {icoon:"🪜🧭",vaardigheid:"Tijd en ruimte",                      doel:"Ik leg uit waar ik ben en waar ik naartoe wil.",                      klasse:"tijdruimte"},
-  {icoon:"💻",  vaardigheid:"Digitale vaardigheden",               doel:"Ik bedien een computer.",                                             klasse:"digitaal"},
-  {icoon:"📱",  vaardigheid:"Digitale vaardigheden",               doel:"Ik gebruik digitale en online mediatools.",                           klasse:"digitaal"},
-  {icoon:"W",   vaardigheid:"Digitale vaardigheden",               doel:"Ik werk met het programma Word.",                                     klasse:"digitaal"},
-  {icoon:"X",   vaardigheid:"Digitale vaardigheden",               doel:"Ik werk met het programma Excel.",                                    klasse:"digitaal"},
-  {icoon:"P",   vaardigheid:"Digitale vaardigheden",               doel:"Ik werk met het programma Powerpoint.",                               klasse:"digitaal"},
-  {icoon:"📐",  vaardigheid:"Techniek en praktische vaardigheden", doel:"Ik meet met een meetinstrument.",                                     klasse:"techniek"},
-  {icoon:"⛑️", vaardigheid:"Techniek en praktische vaardigheden", doel:"Ik werk veilig volgens de regels.",                                   klasse:"techniek"},
-  {icoon:"📋",  vaardigheid:"Techniek en praktische vaardigheden", doel:"Ik werk het product goed af met een stappenplan.",                    klasse:"techniek"},
-  {icoon:"🔵",  vaardigheid:"Leerstrategie",                       doel:"Ik vat de informatie samen.",                                         klasse:"leer"},
-  {icoon:"🧠",  vaardigheid:"Leerstrategie",                       doel:"Ik memoriseer de inhoud van de les.",                                 klasse:"leer"},
-  {icoon:"🔤",  vaardigheid:"Leerstrategie (ALFA)",                doel:"Ik memoriseer de woorden uit de les.",                                klasse:"leer"},
-  {icoon:"📄",  vaardigheid:"Leerstrategie",                       doel:"Ik herken de structuur van een tekst.",                               klasse:"leer"},
-  {icoon:"💡",  vaardigheid:"Leerstrategie",                       doel:"Ik pas de leerstof toe om problemen op te lossen.",                   klasse:"leer"},
-  {icoon:"🙏",  vaardigheid:"Godsdienst",                          doel:"Ik zeg wat ik belangrijk vind.",                                      klasse:"gods"},
-  {icoon:"⛪",  vaardigheid:"Godsdienst",                          doel:"Ik herken de verschillende godsdiensten.",                            klasse:"gods"},
-  {icoon:"❤️", vaardigheid:"Godsdienst",                          doel:"Ik toon respect voor iedereen in een gesprek.",                       klasse:"gods"},
-];
-
-const secties = [
-  {label:"Cultuur",klasse:"cultuur"},{label:"Tijd en ruimte",klasse:"tijdruimte"},
-  {label:"Digitale vaardigheden",klasse:"digitaal"},{label:"Techniek en praktische vaardigheden",klasse:"techniek"},
-  {label:"Leerstrategie",klasse:"leer"},{label:"Godsdienst",klasse:"gods"},
-];
-
 const talenten = [
-  {id:"zelfstandig",naam:"Zelfstandig"},{id:"initiatief",naam:"Initiatief nemen"},{id:"doorzetting",naam:"Doorzettingsvermogen"},
-  {id:"planmatig",naam:"Planmatig"},{id:"flexibel",naam:"Flexibel"},{id:"technisch",naam:"Technisch inzicht"},
-  {id:"veilig",naam:"Veilig"},{id:"zorgzaam",naam:"Zorgzaam"},{id:"sociaal",naam:"Sociaal"},
-  {id:"leiderschap",naam:"Leiderschap"},{id:"digitaal",naam:"Digitaal inzicht"},{id:"handig",naam:"Handig"},
-  {id:"actief",naam:"Actief"},{id:"ruimtelijk",naam:"Ruimtelijk inzicht"},{id:"wiskundig",naam:"Wiskundig"},
-  {id:"communicatief",naam:"Communicatief"},{id:"leergierig",naam:"Leergierig"},{id:"talig",naam:"Talig"},
-  {id:"creatief",naam:"Creatief"},{id:"nauwkeurig",naam:"Nauwkeurig"},{id:"probleemoplossend",naam:"Probleemoplossend"},
-  {id:"kritisch",naam:"Kritisch"},{id:"zelfkennis",naam:"Zelfkennis"},
+  {id:"zelfstandig",naam:"Zelfstandig",icoon:"🧍",omschrijving:"Ik kan alleen iets maken of doen."},
+  {id:"initiatief",naam:"Initiatief nemen",icoon:"💡",omschrijving:"Ik durf beslissingen nemen en tot actie overgaan."},
+  {id:"doorzetting",naam:"Doorzettingsvermogen",icoon:"🏁",omschrijving:"Ik houd vol tot iets af is."},
+  {id:"planmatig",naam:"Planmatig",icoon:"📋",omschrijving:"Ik kan taken stap voor stap plannen."},
+  {id:"flexibel",naam:"Flexibel",icoon:"🔄",omschrijving:"Ik kan omgaan met verandering."},
+  {id:"technisch",naam:"Technisch inzicht",icoon:"⚙️",omschrijving:"Ik begrijp hoe dingen werken."},
+  {id:"veilig",naam:"Veilig",icoon:"🦺",omschrijving:"Ik werk voorzichtig en kan gevaar inschatten."},
+  {id:"zorgzaam",naam:"Zorgzaam",icoon:"🤗",omschrijving:"Ik draag zorg voor mensen en materiaal."},
+  {id:"sociaal",naam:"Sociaal",icoon:"👥",omschrijving:"Ik doe graag dingen samen met anderen."},
+  {id:"leiderschap",naam:"Leiderschap",icoon:"🎯",omschrijving:"Ik neem vaak de leiding in een groep."},
+  {id:"digitaal",naam:"Digitaal inzicht",icoon:"💻",omschrijving:"Ik ben goed met technologie en media."},
+  {id:"handig",naam:"Handig",icoon:"🛠️",omschrijving:"Ik werk vlot met mijn handen."},
+  {id:"actief",naam:"Actief",icoon:"🏃",omschrijving:"Ik beweeg graag en werk liefst rechtstaand."},
+  {id:"ruimtelijk",naam:"Ruimtelijk inzicht",icoon:"📐",omschrijving:"Ik kan goed puzzelen en afmetingen inschatten."},
+  {id:"wiskundig",naam:"Wiskundig",icoon:"🔢",omschrijving:"Ik ben graag met cijfers bezig."},
+  {id:"communicatief",naam:"Communicatief",icoon:"🗣️",omschrijving:"Ik spreek en luister graag."},
+  {id:"leergierig",naam:"Leergierig",icoon:"🔍",omschrijving:"Ik leer graag nieuwe dingen."},
+  {id:"talig",naam:"Talig",icoon:"📝",omschrijving:"Ik ben goed bezig met woorden."},
+  {id:"creatief",naam:"Creatief",icoon:"🎨",omschrijving:"Ik heb veel ideeën en maak graag mooie dingen."},
+  {id:"nauwkeurig",naam:"Nauwkeurig",icoon:"🔬",omschrijving:"Ik werk precies en heb oog voor detail."},
+  {id:"probleemoplossend",naam:"Probleemoplossend",icoon:"🧩",omschrijving:"Ik bedenk oplossingen bij moeilijke situaties."},
+  {id:"kritisch",naam:"Kritisch",icoon:"✅",omschrijving:"Ik controleer of alles goed verloopt."},
+  {id:"zelfkennis",naam:"Zelfkennis",icoon:"🪞",omschrijving:"Ik weet wie ik ben en wat ik wil bereiken."},
 ];
 
-let huidigeLeerlingen = [];
-function setStatus(msg) { document.getElementById('status').textContent=msg; }
+const grid = document.getElementById('talent-grid');
+talenten.forEach(t => {
+  const k = document.createElement('div');
+  k.className='talent-kaart';
+  k.innerHTML=`<div class="talent-icoon">${t.icoon}</div><div class="talent-naam">${t.naam}</div><div class="talent-omschrijving">${t.omschrijving}</div><div class="talent-balk">${[1,2,3,4,5].map(i=>`<div class="talent-stap" id="tstap-${t.id}-${i}" onclick="klikTalent('${t.id}',${i})"></div>`).join('')}</div>`;
+  grid.appendChild(k);
+});
 
-window.laadKlas = async function() {
-  const klas = document.getElementById('klas-filter').value;
-  const leerlingFilter = document.getElementById('leerling-filter');
-  leerlingFilter.innerHTML='<option value="">— Alle leerlingen —</option>';
-  document.getElementById('samenvatting').style.display='none';
-  document.getElementById('overzicht').innerHTML='<p class="geen-data">Laden…</p>';
-  huidigeLeerlingen=[];
-  if (!klas) { document.getElementById('overzicht').innerHTML='<p class="geen-data">Kies een klas.</p>'; return; }
-  setStatus('⏳ Laden…');
-  try {
-    const snap = await getDocs(collection(db,'klassen',klas,'leerlingen'));
-    for (const d of snap.docs) {
-      const ldata = d.data();
-      // Laad ook toekomstdata
-      const tSnap = await getDoc(doc(db,'klassen',klas,'toekomst',d.id));
-      ldata.toekomst = tSnap.exists() ? tSnap.data() : null;
-      huidigeLeerlingen.push({...ldata, _id:d.id});
-      const opt=document.createElement('option'); opt.value=d.id; opt.textContent=d.id;
-      leerlingFilter.appendChild(opt);
-    }
-    setStatus('');
-  } catch(e) { setStatus('⚠️ Laadprobleem.'); return; }
-  if (huidigeLeerlingen.length===0) { document.getElementById('overzicht').innerHTML='<p class="geen-data">Nog geen leerlingen in deze klas.</p>'; return; }
-  toonSamenvatting(klas,huidigeLeerlingen);
-  toonLeerlingen(huidigeLeerlingen,klas);
-};
+window.klikTalent = function(id,val) { for(let i=1;i<=5;i++) document.getElementById(`tstap-${id}-${i}`).classList.toggle('actief',i<=val); };
+function getTalentWaarde(id) { for(let i=5;i>=1;i--) if(document.getElementById(`tstap-${id}-${i}`)?.classList.contains('actief')) return i; return 0; }
+function setTalentWaarde(id,val) { for(let i=1;i<=5;i++) document.getElementById(`tstap-${id}-${i}`)?.classList.toggle('actief',i<=val); }
 
-window.filterLeerling = function() {
-  const klas=document.getElementById('klas-filter').value;
-  const naam=document.getElementById('leerling-filter').value;
-  const lijst=naam?huidigeLeerlingen.filter(l=>l.naam===naam):huidigeLeerlingen;
-  toonSamenvatting(klas,lijst); toonLeerlingen(lijst,klas);
-};
-
-function toonSamenvatting(klas,leerlingen) {
-  const s=document.getElementById('samenvatting');
-  document.getElementById('samenvatting-titel').textContent=`Klas ${klas.charAt(0).toUpperCase()+klas.slice(1)} — ${leerlingen.length} leerling(en)`;
-  const totalen={},aantallen={};
-  secties.forEach(s=>{totalen[s.klasse]=0;aantallen[s.klasse]=0;});
-  leerlingen.forEach(l=>leerdoelen.forEach(item=>{totalen[item.klasse]+=(l.leerdoelen?.[item.doel]||0);aantallen[item.klasse]++;}));
-  document.getElementById('stat-rij').innerHTML=secties.map(sec=>{
-    const gem=aantallen[sec.klasse]>0?(totalen[sec.klasse]/aantallen[sec.klasse]).toFixed(1):'–';
-    return `<div class="stat-blok"><div class="stat-getal">${gem}</div><div class="stat-label">${sec.label}</div></div>`;
-  }).join('');
-  s.style.display='block';
-}
-
-function toonLeerlingen(leerlingen,klas) {
-  const overzicht=document.getElementById('overzicht');
-  overzicht.innerHTML='';
-  leerlingen.forEach(data=>{
-    const lid=`L_${klas}_${data.naam.replace(/\s+/g,'_')}`;
-    const kaart=document.createElement('div');
-    kaart.className='leerling-kaart';
-
-    // HEADER
-    let html=`<div class="leerling-header">
-      <div><span class="leerling-naam">${data.naam}</span><span class="klas-badge">${data.klas}</span>
-      ${data.pincode?'<span style="font-size:11px;color:#2BAF84;margin-left:8px;">🔒 Pincode ingesteld</span>':'<span style="font-size:11px;color:#aaa;margin-left:8px;">Geen pincode</span>'}
-      </div>
-      <div class="acties-rij">
-        <span class="leerling-meta">Opgeslagen: ${data.tijdstip||'–'}</span>
-        <button class="reset-pin-knop" onclick="resetPin('${klas}','${data.naam}')">🔑 Reset pincode</button>
-        <button class="verwijder-knop" onclick="verwijder('${klas}','${data.naam}')">✕ Verwijder</button>
-      </div>
-    </div>`;
-
-    // TABS
-    html+=`<div class="leerling-tabs">
-      <button class="leerling-tab actief" onclick="leerlingTab('${lid}','leerdoelen',this)">📊 Leerdoelen</button>
-      <button class="leerling-tab" onclick="leerlingTab('${lid}','toekomst',this)">🌟 Mijn toekomst</button>
-    </div><div class="leerling-inhoud">`;
-
-    // PANEL LEERDOELEN
-    html+=`<div class="leerling-panel actief" id="${lid}-leerdoelen">`;
-    secties.forEach(sectie=>{
-      const items=leerdoelen.filter(l=>l.klasse===sectie.klasse);
-      html+=`<div class="sectie-label ${sectie.klasse}">${sectie.label}</div>`;
-      items.forEach(item=>{
-        const fase=data.leerdoelen?.[item.doel]||0;
-        const bestaandeFeedback=data.feedback?.[item.doel]||'';
-        const balkHTML=[1,2,3,4,5].map(i=>`<div class="mini-stap ${i<=fase?sectie.klasse+'-kleur':''}"></div>`).join('');
-        const faseSelectId=`fs_${lid}_${item.doel.replace(/[^a-zA-Z0-9]/g,'_')}`;
-        const fbId=`fb_${lid}_${item.doel.replace(/[^a-zA-Z0-9]/g,'_')}`;
-        const faseOpties=FASE_LABELS.map((l,i)=>`<option value="${i}"${i===fase?' selected':''}>${l}</option>`).join('');
-        html+=`<div class="leerdoel-rij">
-          <span class="leerdoel-naam">${item.icoon} ${item.doel}</span>
-          <div class="mini-balk">${balkHTML}</div>
-          <select class="mini-fase-select" id="${faseSelectId}" onchange="updateMiniBalk(this,'${sectie.klasse}','${faseSelectId}')">${faseOpties}</select>
-          <div class="feedback-invoer"><textarea id="${fbId}" placeholder="Feedback…" rows="1">${bestaandeFeedback}</textarea></div>
-        </div>`;
-      });
-    });
-    html+=`<div class="leerling-acties-onder">
-      <button class="feedback-opslaan-knop" id="knop_${lid}" onclick="slaLeerdoelenOp('${klas}','${data.naam}','${lid}')">💾 Leerdoelen + feedback opslaan</button>
-      <span class="opslaan-bev" id="bev_${lid}">✅ Opgeslagen!</span>
-    </div></div>`;
-
-    // PANEL TOEKOMST
-    html+=`<div class="leerling-panel" id="${lid}-toekomst">`;
-    const t=data.toekomst;
-    if (!t) { html+=`<p style="color:#aaa;font-size:13px;padding:10px 0;">Deze leerling heeft nog niets ingevuld bij 'Mijn toekomst'.</p>`; }
-    else {
-      // Tijdlijn
-      if (t.tijdlijn) {
-        html+=`<div class="toekomst-sectie"><h4>🗓️ Tijdlijn</h4><div class="tijdlijn-mini">`;
-        const stappen=[['alfa','Alfa'],['instroom','Instroom'],['uitstroom','Uitstroom'],['snuffel','Snuffelstage'],['nieuw','Start nieuwe school']];
-        stappen.forEach(([k,label])=>{ if(t.tijdlijn[k]) html+=`<div class="tijdlijn-item"><strong>${label}</strong>${t.tijdlijn[k]}</div>`; });
-        html+=`</div></div>`;
-      }
-      // Wie ben ik
-      if (t.wiebenik) {
-        html+=`<div class="toekomst-sectie"><h4>👤 Wie ben ik?</h4>`;
-        const velden=[['naam','Naam'],['leeftijd','Leeftijd'],['tijd','Tijdsbesteding'],['school','Leuk op school'],['voorwerp','Voorwerp'],['persoon','Belangrijk persoon'],['plek','Favoriete plek']];
-        velden.forEach(([k,label])=>{ if(t.wiebenik[k]) html+=`<div class="toekomst-veld"><span class="toekomst-sleutel">${label}</span><span class="toekomst-waarde">${t.wiebenik[k]}</span></div>`; });
-        html+=`</div>`;
-      }
-      // Wensberoep
-      if (t.watikhword) {
-        html+=`<div class="toekomst-sectie"><h4>🌟 Wat wil ik worden?</h4>`;
-        const velden=[['kind','Als kind droomde ik van'],['niet','Wil ik niet worden'],['kennis','Ik weet veel over'],['beroep','Wensberoep'],['goed','Ik kan heel goed'],['les','Leukste les']];
-        velden.forEach(([k,label])=>{ if(t.watikhword[k]) html+=`<div class="toekomst-veld"><span class="toekomst-sleutel">${label}</span><span class="toekomst-waarde">${t.watikhword[k]}</span></div>`; });
-        html+=`</div>`;
-      }
-      // Hoe leer ik
-      if (t.hoeleerik) {
-        const leerwijzeLabels={doen:'Al doende leren',boek:'Uit boeken leren',beide:'Beide'};
-        const studieLabels={graag:'Graag studeren',mindergraag:'Minder graag studeren'};
-        const hulpItems=['rust','muziek','herhalen','uitleggen','plaatjes','pauzes'].filter(k=>t.hoeleerik['help_'+k]).join(', ');
-        html+=`<div class="toekomst-sectie"><h4>📖 Hoe leer ik?</h4>`;
-        if(t.hoeleerik.leerwijze) html+=`<div class="toekomst-veld"><span class="toekomst-sleutel">Leerwijze</span><span class="toekomst-waarde">${leerwijzeLabels[t.hoeleerik.leerwijze]||t.hoeleerik.leerwijze}</span></div>`;
-        if(t.hoeleerik.studiehouding) html+=`<div class="toekomst-veld"><span class="toekomst-sleutel">Studiehouding</span><span class="toekomst-waarde">${studieLabels[t.hoeleerik.studiehouding]||t.hoeleerik.studiehouding}</span></div>`;
-        if(hulpItems) html+=`<div class="toekomst-veld"><span class="toekomst-sleutel">Wat helpt</span><span class="toekomst-waarde">${hulpItems}</span></div>`;
-        if(t.hoeleerik.extra) html+=`<div class="toekomst-veld"><span class="toekomst-sleutel">Extra</span><span class="toekomst-waarde">${t.hoeleerik.extra}</span></div>`;
-        html+=`</div>`;
-      }
-      // Talenten
-      if (t.talenten) {
-        html+=`<div class="toekomst-sectie"><h4>💪 Talenten</h4>`;
-        talenten.forEach(tal=>{
-          const val=t.talenten[tal.id]||0;
-          if(val>0) {
-            const balkHTML=[1,2,3,4,5].map(i=>`<div class="talent-mini-stap${i<=val?' actief':''}"></div>`).join('');
-            html+=`<div class="talent-rij"><span class="talent-naam-lk">${tal.naam}</span><div class="talent-mini-balk">${balkHTML}</div><span style="font-size:11px;color:#aaa;margin-left:4px;">${val}/5</span></div>`;
-          }
-        });
-        html+=`</div>`;
-      }
-    }
-    html+=`</div></div>`; // panel + inhoud
-
-    kaart.innerHTML=html;
-    overzicht.appendChild(kaart);
-  });
-}
-
-window.leerlingTab = function(lid,panel,el) {
-  document.querySelectorAll(`#L_${lid.split('L_')[1].split('-')[0]}-leerdoelen, #L_${lid.split('L_')[1].split('-')[0]}-toekomst`);
-  const tabs=el.closest('.leerling-tabs').querySelectorAll('.leerling-tab');
-  const panels=el.closest('.leerling-kaart').querySelectorAll('.leerling-panel');
-  tabs.forEach(t=>t.classList.remove('actief'));
-  panels.forEach(p=>p.classList.remove('actief'));
+window.toonSectie = function(id, el) {
+  document.querySelectorAll('.sectie').forEach(s=>s.classList.remove('actief'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('actief'));
+  document.getElementById('s-'+id).classList.add('actief');
   el.classList.add('actief');
-  document.getElementById(`${lid}-${panel}`).classList.add('actief');
 };
 
-window.updateMiniBalk = function(select, klasse, id) {
-  const val=parseInt(select.value);
-  const rij=select.closest('.leerdoel-rij');
-  const stappen=rij.querySelectorAll('.mini-stap');
-  stappen.forEach((s,i)=>{ s.className=`mini-stap${i<val?' '+klasse+'-kleur':''}`; });
-};
+let huidigNaam='', huidigKlas='';
 
-window.slaLeerdoelenOp = async function(klas,naam,lid) {
-  const knop=document.getElementById(`knop_${lid}`);
-  const bev=document.getElementById(`bev_${lid}`);
-  knop.disabled=true;
-  const nieuweLeerdoelen={}, feedback={};
-  leerdoelen.forEach(item=>{
-    const faseId=`fs_${lid}_${item.doel.replace(/[^a-zA-Z0-9]/g,'_')}`;
-    const fbId=`fb_${lid}_${item.doel.replace(/[^a-zA-Z0-9]/g,'_')}`;
-    const faseEl=document.getElementById(faseId);
-    const fbEl=document.getElementById(fbId);
-    if(faseEl) nieuweLeerdoelen[item.doel]=parseInt(faseEl.value);
-    if(fbEl) feedback[item.doel]=fbEl.value.trim();
-  });
+window.inloggen = async function() {
+  const naam = document.getElementById('in-naam').value.trim();
+  const klas = document.getElementById('in-klas').value;
+  const pin  = document.getElementById('in-pin').value.trim();
+  const fout = document.getElementById('login-fout');
+  fout.style.display='none';
+  if (!naam||!klas||pin.length!==4) { fout.textContent='Vul naam, klas en pincode in.'; fout.style.display='block'; return; }
   try {
-    const ref=doc(db,'klassen',klas,'leerlingen',naam);
-    const snap=await getDoc(ref);
-    const bestaand=snap.exists()?snap.data():{};
-    await setDoc(ref,{...bestaand,leerdoelen:nieuweLeerdoelen,feedback,tijdstip:new Date().toLocaleString('nl-BE')});
-    const l=huidigeLeerlingen.find(l=>l.naam===naam);
-    if(l){l.leerdoelen=nieuweLeerdoelen;l.feedback=feedback;}
-    bev.style.display='inline'; setTimeout(()=>bev.style.display='none',3000);
-  } catch(e){alert('Opslaan mislukt.');}
-  knop.disabled=false;
+    const ref = doc(db,'klassen',klas,'leerlingen',naam);
+    const snap = await getDoc(ref);
+    if (!snap.exists()||!snap.data().pincode) { fout.textContent='Geen account gevonden. Log eerst in via de leerdoelenpagina.'; fout.style.display='block'; return; }
+    if (snap.data().pincode===pin) { startSessie(naam,klas); }
+    else { fout.textContent='Verkeerde pincode. Probeer opnieuw.'; fout.style.display='block'; }
+  } catch(e) { fout.textContent='Verbindingsfout.'; fout.style.display='block'; }
 };
 
-window.resetPin = async function(klas,naam) {
-  if(!confirm(`Pincode van ${naam} resetten? De leerling kan daarna een nieuwe pincode instellen.`)) return;
-  try {
-    await updateDoc(doc(db,'klassen',klas,'leerlingen',naam),{pincode:null});
-    alert(`Pincode van ${naam} is gereset. De leerling kan nu een nieuwe pincode kiezen.`);
-    laadKlas();
-  } catch(e){alert('Reset mislukt.');}
-};
+function startSessie(naam,klas) {
+  huidigNaam=naam; huidigKlas=klas;
+  sessionStorage.setItem('okan_toekomst',JSON.stringify({naam,klas}));
+  document.getElementById('login-scherm').style.display='none';
+  document.getElementById('hoofd').style.display='block';
+  document.getElementById('nav-naam').textContent=naam;
+  document.getElementById('nav-klas').textContent=klas;
+  laadData();
+}
 
-window.verwijder = async function(klas,naam) {
-  if(!confirm(`Verwijder alle data van ${naam}?`)) return;
+window.uitloggen = function() { sessionStorage.removeItem('okan_toekomst'); location.reload(); };
+
+const opgeslagenSessie = sessionStorage.getItem('okan_toekomst');
+if (opgeslagenSessie) { const s=JSON.parse(opgeslagenSessie); huidigNaam=s.naam; huidigKlas=s.klas; startSessie(s.naam,s.klas); }
+
+async function laadData() {
   try {
-    await deleteDoc(doc(db,'klassen',klas,'leerlingen',naam));
-    await deleteDoc(doc(db,'klassen',klas,'toekomst',naam));
-    huidigeLeerlingen=huidigeLeerlingen.filter(l=>l.naam!==naam);
-    const opt=document.querySelector(`#leerling-filter option[value="${naam}"]`);
-    if(opt) opt.remove();
-    toonSamenvatting(document.getElementById('klas-filter').value,huidigeLeerlingen);
-    toonLeerlingen(huidigeLeerlingen,document.getElementById('klas-filter').value);
-  } catch(e){alert('Verwijderen mislukt.');}
+    const snap = await getDoc(doc(db,'klassen',huidigKlas,'toekomst',huidigNaam));
+    if (!snap.exists()) return;
+    const d = snap.data();
+    if (d.tijdlijn) ['alfa','instroom','uitstroom','snuffel','nieuw'].forEach(k=>{ const el=document.getElementById('datum-'+k); if(el&&d.tijdlijn[k]) el.value=d.tijdlijn[k]; });
+    if (d.wiebenik) ['naam','leeftijd','tijd','school','voorwerp','persoon','plek'].forEach(k=>{ const el=document.getElementById('wbi-'+k); if(el&&d.wiebenik[k]!==undefined) el.value=d.wiebenik[k]; });
+    if (d.watikhword) ['kind','niet','kennis','beroep','goed','les'].forEach(k=>{ const el=document.getElementById('wiw-'+k); if(el&&d.watikhword[k]!==undefined) el.value=d.watikhword[k]; });
+    if (d.hoeleerik) {
+      if (d.hoeleerik.leerwijze) { const el=document.getElementById('leer-'+d.hoeleerik.leerwijze); if(el) el.checked=true; }
+      if (d.hoeleerik.studiehouding) { const el=document.getElementById('studie-'+d.hoeleerik.studiehouding); if(el) el.checked=true; }
+      ['rust','muziek','herhalen','uitleggen','plaatjes','pauzes'].forEach(k=>{ const el=document.getElementById('help-'+k); if(el) el.checked=!!d.hoeleerik['help_'+k]; });
+      const ex=document.getElementById('leer-extra'); if(ex&&d.hoeleerik.extra) ex.value=d.hoeleerik.extra;
+    }
+    if (d.talenten) talenten.forEach(t=>{ if(d.talenten[t.id]!==undefined) setTalentWaarde(t.id,d.talenten[t.id]); });
+  } catch(e) { console.error(e); }
+}
+
+window.opslaan = async function(sectie) {
+  if (!huidigNaam||!huidigKlas) { alert('Niet ingelogd.'); return; }
+  let data={};
+  if (sectie==='tijdlijn') data.tijdlijn={alfa:document.getElementById('datum-alfa').value,instroom:document.getElementById('datum-instroom').value,uitstroom:document.getElementById('datum-uitstroom').value,snuffel:document.getElementById('datum-snuffel').value,nieuw:document.getElementById('datum-nieuw').value};
+  else if (sectie==='wiebenik') { data.wiebenik={}; ['naam','leeftijd','tijd','school','voorwerp','persoon','plek'].forEach(k=>data.wiebenik[k]=document.getElementById('wbi-'+k)?.value||''); }
+  else if (sectie==='watikhword') { data.watikhword={}; ['kind','niet','kennis','beroep','goed','les'].forEach(k=>data.watikhword[k]=document.getElementById('wiw-'+k)?.value||''); }
+  else if (sectie==='hoeleerik') { data.hoeleerik={leerwijze:document.querySelector('input[name="leerwijze"]:checked')?.value||'',studiehouding:document.querySelector('input[name="studiehouding"]:checked')?.value||'',extra:document.getElementById('leer-extra')?.value||''}; ['rust','muziek','herhalen','uitleggen','plaatjes','pauzes'].forEach(k=>data.hoeleerik['help_'+k]=document.getElementById('help-'+k)?.checked||false); }
+  else if (sectie==='talenten') { data.talenten={}; talenten.forEach(t=>data.talenten[t.id]=getTalentWaarde(t.id)); }
+  try {
+    await setDoc(doc(db,'klassen',huidigKlas,'toekomst',huidigNaam),data,{merge:true});
+    const bev=document.getElementById('bev-'+sectie); bev.style.display='inline'; setTimeout(()=>bev.style.display='none',3000);
+  } catch(e) { alert('Opslaan mislukt.'); }
 };
 </script>
 </body>
