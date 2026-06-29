@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OKAN Leerlijnen</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #F0F2F5; color: #1a1a1a; }
+nav { background: #1a1a2e; padding: 14px 24px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; position: sticky; top: 0; z-index: 200; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+nav h1 { font-size: 16px; font-weight: 700; color: white; flex-shrink: 0; }
+.nav-domein-knoppen { display: flex; gap: 6px; flex-wrap: wrap; }
+.nav-domein { padding: 5px 12px; border-radius: 16px; font-size: 12px; font-weight: 600; cursor: pointer; border: 2px solid transparent; color: rgba(255,255,255,0.7); background: rgba(255,255,255,0.08); transition: all 0.15s; font-family: inherit; }
+.nav-domein:hover { color: white; background: rgba(255,255,255,0.15); }
+.nav-domein.actief { color: white; border-color: white; background: rgba(255,255,255,0.2); }
+#app { max-width: 1100px; margin: 0 auto; padding: 24px 16px 60px; }
+.domein-sectie { display: none; }
+.domein-sectie.actief { display: block; }
+.domein-header { margin-bottom: 20px; }
+.domein-header h2 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+.domein-header p { font-size: 13px; color: #888; }
+.kaarten-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; margin-bottom: 32px; }
+.doel-kaart { display: flex; align-items: center; gap: 14px; background: white; border-radius: 12px; border-left: 5px solid; padding: 14px 16px; cursor: pointer; transition: all 0.15s; box-shadow: 0 1px 4px rgba(0,0,0,0.07); user-select: none; }
+.doel-kaart:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+.doel-kaart.actief-kaart { outline: 3px solid #1a1a2e; }
+.doel-icoon { font-size: 24px; min-width: 36px; text-align: center; line-height: 1; }
+.doel-icoon-svg { min-width: 36px; display: flex; align-items: center; justify-content: center; }
+.ms-icon { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 5px; font-size: 15px; font-weight: 700; color: white; }
+.doel-tekst .cat { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
+.doel-tekst .naam { font-size: 12px; color: #333; line-height: 1.3; }
+#leerlijn-detail { display: none; background: white; border-radius: 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); overflow: hidden; margin-top: 8px; }
+.detail-header { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid #eee; }
+.detail-titel { font-size: 16px; font-weight: 700; }
+.detail-meta { font-size: 12px; color: #888; }
+.sluit-knop { background: none; border: 1px solid #ddd; border-radius: 8px; padding: 5px 12px; font-size: 12px; cursor: pointer; font-family: inherit; color: #666; }
+.sluit-knop:hover { background: #f5f5f5; }
+.doel-tabs { display: flex; gap: 0; overflow-x: auto; border-bottom: 2px solid #eee; padding: 0 20px; }
+.doel-tab { padding: 10px 16px; font-size: 12px; font-weight: 600; cursor: pointer; color: #888; border-bottom: 3px solid transparent; white-space: nowrap; background: none; border-top: none; border-left: none; border-right: none; font-family: inherit; transition: all 0.15s; margin-bottom: -2px; }
+.doel-tab:hover { color: #333; }
+.doel-tab.actief { color: #1a1a2e; border-bottom-color: #1a1a2e; }
+.doel-panel { display: none; padding: 20px; }
+.doel-panel.actief { display: block; }
+.rubric-wrap { overflow-x: auto; }
+.rubric-tabel { width: 100%; border-collapse: collapse; min-width: 700px; }
+.rubric-tabel th { font-size: 11px; font-weight: 700; padding: 8px 10px; text-align: center; border: 1px solid #ddd; background: #f8f8f8; }
+.rubric-tabel td { padding: 4px 6px; border: 1px solid #ddd; vertical-align: top; font-size: 12px; }
+.rubric-tabel td:first-child { font-weight: 700; font-size: 11px; background: #f8f8f8; min-width: 100px; max-width: 120px; }
+.rubric-cel { width: 100%; min-height: 80px; border: none; outline: none; font-family: inherit; font-size: 12px; resize: none; background: transparent; line-height: 1.5; color: #333; padding: 4px; overflow: hidden; }
+.cat-cel { width: 100%; min-height: 40px; border: none; outline: none; font-family: inherit; font-size: 11px; font-weight: 700; resize: none; background: transparent; color: #555; padding: 4px; overflow: hidden; }
+.beschrijving-rij td { background: #EEF4FF !important; }
+.beschrijving-rij td:first-child { background: #DDE8FF !important; color: #1a3a8a; font-size: 11px; }
+.fase-header-cel { text-align: center; }
+.batterij-wrap { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.batterij-top { width: 12px; height: 4px; background: #555; border-radius: 1px; margin: 0 auto 1px; }
+.batterij-body { width: 28px; height: 52px; border: 2.5px solid #555; border-radius: 4px; padding: 3px; display: flex; flex-direction: column; justify-content: flex-end; gap: 2px; }
+.batterij-streep { height: 6px; border-radius: 2px; }
+.fase-nummer { font-size: 10px; font-weight: 700; color: #555; margin-top: 2px; }
+.voeg-rij-knop { display: block; margin: 10px 0 0; background: #f0f0f0; border: 1.5px dashed #ccc; border-radius: 8px; padding: 7px 16px; font-size: 12px; font-weight: 600; font-family: inherit; cursor: pointer; color: #888; width: 100%; text-align: center; }
+.voeg-rij-knop:hover { background: #e8e8e8; }
+.verwijder-rij { background: none; border: none; cursor: pointer; color: #ddd; font-size: 12px; padding: 1px 3px; float: right; line-height: 1; }
+.verwijder-rij:hover { color: #e55; }
+.opslaan-balk { display: flex; align-items: center; gap: 10px; padding: 14px 20px; border-top: 1px solid #eee; background: #f8f9fa; }
+.opslaan-knop { background: #1a1a2e; color: white; border: none; border-radius: 8px; padding: 9px 20px; font-size: 13px; font-weight: 600; font-family: inherit; cursor: pointer; }
+.opslaan-knop:hover { background: #2d2d4e; }
+.opslaan-bev { font-size: 12px; color: #2BAF84; font-weight: 600; display: none; }
+.status-msg { font-size: 11px; color: #aaa; }
+.cultuur-kaart    { border-color: #AFA9EC; } .cultuur-kaart    .cat { color: #3C3489; }
+.tijdruimte-kaart { border-color: #5DCAA5; } .tijdruimte-kaart .cat { color: #085041; }
+.digitaal-kaart   { border-color: #85B7EB; } .digitaal-kaart   .cat { color: #0C447C; }
+.techniek-kaart   { border-color: #EF9F27; } .techniek-kaart   .cat { color: #633806; }
+.leer-kaart       { border-color: #97C459; } .leer-kaart       .cat { color: #27500A; }
+.gods-kaart       { border-color: #ED93B1; } .gods-kaart       .cat { color: #72243E; }
+.rekentaal-kaart  { border-color: #FFAB40; } .rekentaal-kaart  .cat { color: #7A3B00; }
+.getallen-kaart   { border-color: #66BB6A; } .getallen-kaart   .cat { color: #1B5E20; }
+.hoeveel-kaart    { border-color: #CE93D8; } .hoeveel-kaart    .cat { color: #4A148C; }
+.meten-kaart      { border-color: #64B5F6; } .meten-kaart      .cat { color: #0D47A1; }
+.letters-kaart    { border-color: #F48FB1; } .letters-kaart    .cat { color: #880E4F; }
+.gegevens-kaart   { border-color: #4DD0E1; } .gegevens-kaart   .cat { color: #006064; }
+</style>
+</head>
+<body>
+<nav>
+  <h1>📚 OKAN Leerlijnen</h1>
+  <div class="nav-domein-knoppen" id="nav-knoppen"></div>
+</nav>
+<div id="app">
+  <div id="domein-container"></div>
+  <div id="leerlijn-detail">
+    <div class="detail-header">
+      <div><div class="detail-titel" id="detail-titel"></div><div class="detail-meta" id="detail-meta"></div></div>
+      <button class="sluit-knop" onclick="sluitDetail()">✕ Sluiten</button>
+    </div>
+    <div class="doel-tabs" id="doel-tabs"></div>
+    <div id="doel-panels"></div>
+    <div class="opslaan-balk">
+      <button class="opslaan-knop" onclick="slaanOp()">💾 Opslaan</button>
+      <span class="opslaan-bev" id="opslaan-bev">✅ Opgeslagen!</span>
+      <span class="status-msg" id="status-msg"></span>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+const firebaseConfig = { apiKey:"AIzaSyD8o-_FR2mvEciuxDgkfY__XRF_VtAZwUM", authDomain:"okan-leerdoelen.firebaseapp.com", projectId:"okan-leerdoelen", storageBucket:"okan-leerdoelen.firebasestorage.app", messagingSenderId:"767763105714", appId:"1:767763105714:web:4a79429a484b22a30d06ab" };
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const belgieVlag = `<svg width="30" height="20" viewBox="0 0 30 20" style="border-radius:2px;border:1px solid #ccc"><rect x="0" y="0" width="10" height="20" fill="#1E1E1E"/><rect x="10" y="0" width="10" height="20" fill="#FFE000"/><rect x="20" y="0" width="10" height="20" fill="#EF2020"/></svg>`;
+const mindmapSvg = `<svg width="30" height="30" viewBox="0 0 34 34"><circle cx="17" cy="17" r="5" fill="#639922"/><line x1="17" y1="12" x2="17" y2="4" stroke="#639922" stroke-width="1.8"/><circle cx="17" cy="3" r="3" fill="#97C459"/><line x1="14" y1="15" x2="5" y2="9" stroke="#639922" stroke-width="1.8"/><circle cx="4" cy="8" r="3" fill="#97C459"/><line x1="14" y1="19" x2="5" y2="25" stroke="#639922" stroke-width="1.8"/><circle cx="4" cy="26" r="3" fill="#97C459"/><line x1="20" y1="15" x2="29" y2="9" stroke="#639922" stroke-width="1.8"/><circle cx="30" cy="8" r="3" fill="#97C459"/><line x1="20" y1="19" x2="29" y2="25" stroke="#639922" stroke-width="1.8"/><circle cx="30" cy="26" r="3" fill="#97C459"/><line x1="17" y1="22" x2="17" y2="30" stroke="#639922" stroke-width="1.8"/><circle cx="17" cy="31" r="3" fill="#97C459"/></svg>`;
+const artikelSvg = `<svg width="30" height="30" viewBox="0 0 34 34"><rect x="2" y="2" width="30" height="30" rx="3" fill="#EAF3DE" stroke="#97C459" stroke-width="1.2"/><rect x="5" y="6" width="24" height="3.5" rx="1.5" fill="#27500A"/><rect x="5" y="12" width="24" height="2" rx="1" fill="#639922"/><rect x="5" y="15.5" width="18" height="2" rx="1" fill="#B8D98D"/><rect x="5" y="19.5" width="20" height="2.5" rx="1" fill="#639922"/><rect x="5" y="23.5" width="24" height="2" rx="1" fill="#B8D98D"/><rect x="5" y="27" width="14" height="2" rx="1" fill="#B8D98D"/></svg>`;
+const abcSvg = `<svg width="34" height="26" viewBox="0 0 36 28"><rect width="36" height="28" rx="5" fill="#FFF4E6"/><text x="4" y="21" font-family="Arial" font-weight="800" font-size="18" fill="#7A3B00">abc</text></svg>`;
+const vraagSvg = `<svg width="30" height="30" viewBox="0 0 34 34"><rect x="1" y="1" width="32" height="32" rx="6" fill="#FFF4E6" stroke="#FFAB40" stroke-width="1.5"/><text x="6" y="14" font-family="Arial" font-size="10" fill="#7A3B00">1+2=?</text><line x1="5" y1="18" x2="29" y2="18" stroke="#FFAB40" stroke-width="1"/><text x="6" y="28" font-family="Arial" font-size="10" fill="#7A3B00">stap 1</text></svg>`;
+const kommaSvg = `<svg width="36" height="26" viewBox="0 0 38 28"><rect width="38" height="28" rx="5" fill="#E8F5E9" stroke="#66BB6A" stroke-width="1"/><text x="4" y="20" font-family="Arial" font-weight="800" font-size="15" fill="#1B5E20">0,75</text></svg>`;
+const gaussSvg = `<svg width="34" height="26" viewBox="0 0 38 30"><rect width="38" height="30" rx="5" fill="#E0F7FA" stroke="#4DD0E1" stroke-width="1"/><path d="M3,26 Q8,26 11,20 Q14,14 19,6 Q24,14 27,20 Q30,26 35,26" stroke="#006064" stroke-width="2" fill="none" stroke-linecap="round"/><line x1="3" y1="26" x2="35" y2="26" stroke="#006064" stroke-width="1" opacity="0.4"/><line x1="19" y1="6" x2="19" y2="26" stroke="#006064" stroke-width="1" stroke-dasharray="2,2" opacity="0.5"/></svg>`;
+
+const domeinen = [
+  { id:'cultuur',      naam:'Cultuur' },
+  { id:'tijdruimte',   naam:'Tijd en ruimte' },
+  { id:'digitaal',     naam:'Digitale vaardigheden' },
+  { id:'techniek',     naam:'Techniek en praktijk' },
+  { id:'leerstrategie',naam:'Leerstrategie' },
+  { id:'godsdienst',   naam:'Godsdienst' },
+  { id:'wiskunde',     naam:'Wiskunde' },
+];
+
+const doelen = [
+// ═══════════════════════════════════════════════════════════════
+// CULTUUR
+// ═══════════════════════════════════════════════════════════════
+{ id:'cult1', domein:'cultuur', klasse:'cultuur-kaart', icoon:'🫀', naam:'Ik leef gezond en hygiënisch.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'Niveau', f:['onthouden','begrijpen','begrijpen','toepassen','evalueren en analyseren'] },
+    { cat:'Gezonde levensstijl', f:[
+      'Ik kan aan de hand van visuele informatie gezonde van ongezonde levensstijl onderscheiden.',
+      'Ik benoem wat gezond en ongezond is. Productief opsommen: voorbeelden van gezonde en ongezonde handelingen (tekenen, andere talen, niet vormcorrect, padlet → geef 5 foto\'s van gezonde gewoontes).',
+      'Ik koppel een oorzaak aan een gevolg aan de hand van gegeven informatie: verbindoefening, ...',
+      'Ik onderbouw waarom iets gezond of ongezond is in mijn eigen woorden voor in de les behandelde thema\'s.',
+      'Ik geef spontaan in de klas aan hoe ik aan een gezonde, verantwoorde en veilige levensstijl kan werken en reflecteer hierover.' ]},
+    { cat:'Gezonde voeding', f:[
+      'Omcirkel gezond eten → gezonde voeding herkennen.',
+      'Foto\'s op de juiste plaats in de voedingsdriehoek plaatsen.',
+      'Lege voedingsdriehoek invullen met woorden.',
+      'Voedingsdriehoek uitleggen → waarom is het stukje met rood vlees zo klein? Waarom staan er ook producten buiten de driehoek.',
+      'Toepassen + motiveren obv een casus.' ]},
+    { cat:'Hygiëne', f:[
+      'Hygiëne: ik verbind het gebruiksvoorwerp met de juiste handeling. Vb. Zeep/deo → oksels wassen. Wanneer moet je je handen wassen? Juiste foto\'s/situaties aanduiden.',
+      '','','','' ]},
+  ]}]},
+
+{ id:'cult2', domein:'cultuur', klasse:'cultuur-kaart', icoon:'🗣️', naam:'Ik geef mijn mening.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'', f:[
+      'Ik orden gegeven informatie op basis van een eigenschap (goed/fout, voordelen/nadelen, blij/boos, waar/niet waar).',
+      'Ik duid aan of ik eens of oneens (eens/oneens – ja/nee) ben met een eenvoudige affirmatieve ondubbelzinnige stelling.',
+      'Ik kan de voor- en nadelen benoemen van een behandeld onderwerp.',
+      'Ik benoem of ik het eens of oneens ben met een bepaalde stelling en beargumenteer waarom ik het eens of oneens ben (a.d.h.v. voor- en nadelen).',
+      'Ik kan verwoorden of ik het eens of oneens ben met anderen. Ik accepteer actief de mening van anderen. Ik evalueer verschillende meningen als waardevol.' ]},
+    { cat:'Voorbeelden', f:[
+      'Meerkeuze (2 opties)',
+      'Sporten is tof! Water drinken is gezond.',
+      'bv. Stellingen uit fase 2 zelf formuleren.',
+      'Sporten is gezond. Ik ben het eens. Sporten is gezond. Het is goed voor je lichaam.',
+      'Ik ben het niet eens met Ahmed, maar ik vind zijn mening OK. Ik ben het eens met Yasmen. Ik vind dat sporten goed is voor je lichaam omdat je spieren sterker worden.' ]},
+  ]}]},
+
+{ id:'cult3', domein:'cultuur', klasse:'cultuur-kaart', icoon:'🎨', naam:'Ik druk mezelf artistiek en creatief uit.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'', f:[
+      'De leerling toont interesse voor creatieve en artistieke onderwerpen.',
+      'De leerling experimenteert met creatieve en artistieke thema\'s en processen.',
+      'De leerling voert een creatief-artistieke opdracht uit op expliciete vraag van de leerkracht en rondt dit af.',
+      'De leerling creëert iets creatief en artistiek op vraag van de leerkracht (er is voldoende vrijheid om dit in te vullen) en rondt dit af.',
+      'De leerling creëert zelfstandig iets creatiefs en artistieks en vult dit volledig zelf in.' ]},
+  ]}]},
+
+{ id:'cult4', domein:'cultuur', klasse:'cultuur-kaart', icoon:'🏙️', naam:'Ik maak gebruik van maatschappelijke instellingen.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'', f:[
+      'Ik kan de instelling benoemen.',
+      'Ik benoem waarvoor de maatschappelijke instelling dient en wanneer/waarom ik daar terecht kan.',
+      'Ik weet waar en hoe ik de maatschappelijke instelling kan bereiken.',
+      'Binnen de klascontext formuleer ik de juiste en gepaste hulpvraag in een gesprek (sollicitatiegesprek, immo huisbezoek, hulplijn bellen).',
+      'Ik neem (spontaan) contact op met de juiste maatschappelijke instelling op basis van mijn persoonlijke context/situatie.' ]},
+  ]}]},
+
+{ id:'cult5', domein:'cultuur', klasse:'cultuur-kaart', svg:belgieVlag, naam:'Ik gedraag me op een verantwoorde manier in de samenleving.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'Niveau', f:['onthouden','begrijpen','begrijpen','toepassen','evalueren en analyseren'] },
+    { cat:'Leefregels', f:[
+      'Ik ben op de hoogte van de Belgische leefregels; onderscheiden in "wat mag wel" en "wat mag niet".',
+      'Ik benoem de Belgische omgangsregels productief (schrijven, tekenen, foto\'s zoeken, ...).',
+      'Ik verbind de "waarom-vraag" aan de leefregels die in België bestaan: Wildplassen → stinkt; Stilte na 22h → kunnen slapen (buren).',
+      'Ik geef zelf aan waarom bepaalde leefregels in België bestaan.',
+      'Ik hou me spontaan aan de sociaal aanvaardbare leefregels, ik beargumenteer wat ik zelf doe en reflecteer hierover. Ik ben een behulpzame en tolerante burger. Ik zet anderen ook aan tot gewenst gedrag.' ]},
+    { cat:'Voorbeelden leefregels', f:[
+      '22h veel lawaai → rood kaartje.',
+      'Na 22h, wat moet je doen? → stil zijn.',
+      'Vraag: Verbind de vragen aan de leefregels. 22h stil zijn → de buren moeten kunnen slapen.',
+      'Vraag: Waarom mag je in België geen lawaai meer maken na 22 uur?',
+      '' ]},
+    { cat:'Afvalsortering', f:[
+      'Ik herken wat afval is.',
+      'Ik plaats foto\'s van afval bij de juiste vuilnisbak.',
+      'Ik beoordeel of een stelling over sorteren juist of fout is.',
+      'Ik sorteer afval correct.',
+      'Ik analyseer een casus (of video) en beoordeel wat goed en fout gaat qua afvalsortering.' ]},
+    { cat:'Voorbeelden afval', f:[
+      'Wat is afval? Omcirkel.',
+      'Foto\'s van afval bij de juiste vuilnisbak plaatsen.',
+      'Juist of fout-stellingen over in welke afvalbak iets moet beoordelen.',
+      'In de les STEM, op de speelplaats, in de kookles, …',
+      'Obv een video/casus benoemen wat er fout gaat of wat beter kan qua afvalsortering + gevolgen.' ]},
+  ]}]},
+
+// ═══════════════════════════════════════════════════════════════
+// TIJD EN RUIMTE
+// ═══════════════════════════════════════════════════════════════
+{ id:'tijd1', domein:'tijdruimte', klasse:'tijdruimte-kaart', icoon:'🕰️🌍', naam:'Ik situeer de vakinhoud in tijd en ruimte.',
+  tabs:[
+    { titel:'Leerlijn', rijen:[
+      { cat:'Tijd', f:[
+        'Ik begrijp en benoem tijdsbegrippen zoals: vroeger-later, verleden-heden-toekomst, voor-na, …',
+        'Ik kan de in de les behandelde leerstof situeren binnen de tijd (één onderwerp) → bv. 2024 Wanneer?',
+        'Ik kan gebeurtenissen en gegevens plaatsen in een chronologische volgorde op een eenvoudige tijdslijn met gelijke intervallen.',
+        'Ik kan een gedetailleerde tijdslijn aanvullen.',
+        'Ik kan verschillende thema\'s situeren binnen de tijd en de ruimte (waar en wanneer) en deze thema\'s vergelijken. Ik kan linken leggen tussen de verschillende thema\'s en bepaalde zaken verklaren. → Waarom is het schrift ontstaan in Mesopotamië in die tijd en ruimte?' ]},
+      { cat:'Ruimte', f:[
+        'Ik begrijp en gebruik locatiebegrippen zoals: noord-oost-zuid-west, links-rechts, noordelijk-zuidelijk, onder-boven, …',
+        'Ik kan de in de les behandelde leerstof situeren binnen de ruimte (één onderwerp) → bv. België Waar?',
+        'Ik kan iets opzoeken op een eenvoudige en gekende kaart met één gegeven (bv. landen, rivieren, …).',
+        'Ik kan gegevens op een kaart aanduiden.',
+        '' ]},
+      { cat:'Fase-omschrijving (PAV)', f:[
+        'In Fase 1 leert de leerling nieuwe woorden, begrippen en basisconcepten herkennen en benoemen. De focus ligt op begrijpen, herkennen en correct verwoorden, nog zonder echte toepassingen.',
+        'In Fase 2 leert de leerling nieuwe technieken, structuren en stappenplannen gebruiken in sterk gestuurde oefeningen. De focus ligt op het inoefenen van deelvaardigheden.',
+        'In Fase 3 kan de leerling een volledige vaardigheid zelfstandig toepassen in een eenvoudige, volledig gestuurde situatie met één juiste oplossing.',
+        'In Fase 4 krijgt de leerling meer open, realistischere opdrachten waarbij hij zelf keuzes moet maken (kaart, schaal, aanpak, route, hulpmiddel) en kan uitleggen waarom.',
+        'In Fase 5 kan de leerling zelfstandig een realistische en functionele opdracht volledig uitwerken waarbij hij alle aangeleerde vaardigheden combineert, verschillende mogelijkheden vergelijkt en een gemotiveerde keuze maakt.' ]},
+    ]},
+    { titel:'Windrichtingen', rijen:[
+      { cat:'', f:[
+        'De 8 windrichtingen herkennen en benoemen.',
+        'De windrichtingen correct tekenen op een kaart of rond een gebouw als noorden gegeven is.',
+        'In een eenvoudige situatie met noorden gegeven correct interpreteren waar iets ligt of in welke richting een verplaatsing gebeurt met behulp van windrichtingen.',
+        'In een ruimere situatie zelf afleiden waar iets ligt of in welke richting een verplaatsing moet gebeuren, uitleggen waarom en zelf de windrichtingen correct toepassen.',
+        'De leerling kan zelfstandig een realistische verplaatsing of situatie uitwerken, plannen, vergelijken en uitleggen met gebruik van kaart/atlas/app, schaal, windrichtingen, plaatsbepaling en tijd. ☐ juiste kaart gekozen ☐ schaal correct gebruikt ☐ plaatsbepaling correct ☐ minstens 2 routes ☐ vergelijking met argument ☐ tijd correct ingeschat.' ]},
+    ]},
+    { titel:'België & plaatsbepaling', rijen:[
+      { cat:'België', f:[
+        'België, de provincies en buurlanden herkennen en benoemen.',
+        'Plaatsen situeren ten opzichte van elkaar met de structuur "dit ligt.."; provincies of obv een zeer eenvoudige, gegeven kaart met makkelijk te vinden plaatsen zelf zinnen maken of plaats zoeken obv een gegeven zin.',
+        'In een eenvoudige opdracht met gegeven kaart zelfstandig plaatsen opzoeken en situeren ten opzichte van elkaar met de structuur "dit ligt..".',
+        'Op basis van een ruimere situatie plaatsen correct ten opzichte van elkaar situeren met de structuur "dit ligt …" en in woorden uitleggen waar iets ligt.',
+        '' ]},
+      { cat:'Zinsstructuur', f:[
+        'Zinsstructuur "dit ligt .. ten … van" begrijpen en benoemen.',
+        '','','','' ]},
+      { cat:'Atlas', f:[
+        'Woordenschat omtrent de atlas herkennen en benoemen (register, kaart, code, schaal).',
+        'Met het register een plaats opzoeken in de atlas met sterke sturing (stappenplan, deelvragen).',
+        'In een gesloten opdracht zelfstandig een plaats opzoeken in de atlas van begin tot einde en correct aanduiden op de kaart.',
+        'Op basis van een ruimere situatie zelf kiezen welke kaart in de atlas nodig is, deze correct gebruiken en uitleggen waarom deze kaart geschikt is.',
+        '' ]},
+      { cat:'Schalen', f:[
+        'Woordenschat omtrent de schalen herkennen en benoemen (lokaal, regionaal, nationaal, Europees, mondiaal).',
+        'De verschillende schalen koppelen aan een kaart/afbeelding. Zelf een bepaald type kaart zoeken in een atlas/de cursus.',
+        'In een eenvoudige situatie zelf de juiste kaartsoort kiezen.',
+        'In een ruimere context zelf verantwoorden of een lokale, nationale, Europese of wereldkaart nodig is en uitleggen waarom.',
+        '' ]},
+    ]},
+  ]},
+
+{ id:'tijd2', domein:'tijdruimte', klasse:'tijdruimte-kaart', icoon:'🪜🧭', naam:'Ik situeer mezelf binnen tijd en ruimte.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'Tijd', f:[
+      'Ik benoem het kalenderjaar, mijn geboortedatum en mijn leeftijd.',
+      'Ik toon hoeveel tijd ik besteed aan bepaalde zaken zoals hobby\'s, familie, school, etc.',
+      'Ik benoem wat op dit moment belangrijk voor mij is (zakgeld, familie, vrienden, …).',
+      'Ik kan een route toelichten in tijd en ruimte (hoe kom ik ergens en hoelang duurt het): hoe en waarom ik naar België ben gekomen; een route berekenen naar de dichtstbijzijnde supermarkt.',
+      'Ik benoem mijn fysieke en sociale positie in de wereld, de samenleving en de tijd en geef aan waar ik naartoe wil en waar ik vandaan kom.' ]},
+    { cat:'Ruimte', f:[
+      'Ik benoem mijn huidige woonplaats en mijn geboorteland.',
+      'Ik toon welke plaatsen in mijn omgeving en in de wereld belangrijk zijn voor mij.',
+      'Ik benoem en toon de plaatsen in mijn omgeving die belangrijk zijn voor mezelf. Ik kan in mijn buurt belangrijke locaties opzoeken.',
+      '','']},
+    { cat:'Persoonlijk', f:[
+      '','','','',
+      'De leerling is in staat om zijn/haar fysieke en sociale positie in de wereld, de samenleving en de tijd te benoemen en kan eenvoudig vertellen waar hij/zij vandaan komt, waar hij/zij nu is en waar hij/zij naartoe wil.' ]},
+  ]}]},
+
+// ═══════════════════════════════════════════════════════════════
+// DIGITALE VAARDIGHEDEN
+// ═══════════════════════════════════════════════════════════════
+{ id:'dig1', domein:'digitaal', klasse:'digitaal-kaart', icoon:'💻', naam:'Ik bedien een computer.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'', f:[
+      'De leerling zet een eerste stap tot zelfredzaamheid met een digitaal apparaat.',
+      'De leerling typt speciale tekens. De leerling bewerkt een tekst met speciale toetsen.',
+      'De leerling werkt zelfstandig met een digitaal apparaat. De leerling vraagt soms hulp bij nieuwe en moeilijke instructies. De leerling gebruikt sneltoetsen.',
+      'De leerling kan vlot en zelfstandig werken met een digitaal apparaat. De leerling kent enkele shortkeys en oriënteert zich zelfstandig op de Chromebook.',
+      'Digital native: de leerling gebruikt en oriënteert zich zelfstandig en moeiteloos op een digitaal apparaat.' ]},
+    { cat:'Voorbeelden', f:[
+      'Zelfstandig aanmelden binnen de 8 min. Letters typen. Klik en dubbelklik gebruiken. Geluid aan en uit zetten. Een tabblad afsluiten. Met één hand/vinger typen.',
+      'Speciale tekens typen: @, é, ñ, /, ., #, ! Shift, backspace, delete, spatie en enter gebruiken. Zich zelfstandig aanmelden onder de 3 minuten.',
+      'Ctrl+C, Ctrl+V, Afbeelding kopiëren en plakken. Typen met twee handen op traag tempo. Klikken en wisselen tussen tabbladen.',
+      'Printscreen nemen, Shift+Ctrl+pages. Ctrl+A, Ctrl+Z. Typen met twee handen op snel niveau.',
+      'Bookmarks. Ctrl+Shift+T. Blind typen met twee handen. Split screen.' ]},
+  ]}]},
+
+{ id:'dig2', domein:'digitaal', klasse:'digitaal-kaart', icoon:'📱', naam:'Ik werk met digitale en online mediatools.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'', f:[
+      'De leerling voert ingeoefende instructies op het digitale apparaat uit.',
+      'De leerling voert oefeningen uit op een veelgebruikt platform.',
+      'De leerling oriënteert zich zelfstandig op een gekend platform en voert taken uit. De leerling vraagt soms hulp.',
+      'De leerling oriënteert zich volledig zelfstandig op digitale online mediatools die reeds gekend zijn of op basis van een stappenplan. De leerling heeft hierbij geen hulp nodig.',
+      'Digital native: de leerling gebruikt en oriënteert zich zelfstandig en moeiteloos op gekende en niet gekende online mediatools.' ]},
+    { cat:'Voorbeelden', f:[
+      'Zelfstandig Smartschool openen. Aanmelden SS en office.',
+      'Juiste plek weten te vinden op Smartschool (berichten/vakken/weblinks/…). Mail versturen/beantwoorden. Genially en Nearpod volgen. BW verzenden. Een foto zoeken op het internet.',
+      'Archief en mappen oriënteren. Mail met bijlage versturen. Uploadzone gebruiken. Online tool adhv videostappenplan volgen (Canva, Bookcreator, Kahoot, storyboard…). Informatie raadplegen op een website.',
+      'Vlotte oriëntatie op Office en Smartschool. Zelfstandig een geschreven stappenplan volgen voor Canva en andere nieuwe online tools. Feedback vragen aan AI, gebruik van AI in een leerproces. Informatie en foto\'s verzamelen op verschillende sites en die combineren.',
+      'Digital native. Goede zoektermen voor Google ingeven. Zelfstandig feedback vragen aan AI. Intuïtief een online app gebruiken (zonder stappenplan). Digitale zelfredzaamheid.' ]},
+    { cat:'Google Maps', f:[
+      'De leerling kan een locatie vinden met Google Maps.',
+      'De leerling kan zelfstandig een eenvoudige routebeschrijving opzoeken.',
+      'De leerling kan een routebeschrijving opzoeken en de bijhorende informatie, zoals afstand en reistijd, correct interpreteren.',
+      'De leerling kan locaties van voorzieningen (zoals winkels, restaurants en diensten) opzoeken, openingsuren aflezen en de functie "in de buurt" gebruiken om relevante plaatsen te vinden.',
+      'Digital native: De leerling kan moeiteloos locaties opzoeken, routes plannen, schakelen tussen vervoersmiddelen. De leerling kan openingsuren en beoordelingen raadplegen. Hij/zij kan de kaartweergave aanpassen.' ]},
+    { cat:'Voorbeelden Google Maps', f:[
+      'Een locatie ingeven. Google Maps openen.',
+      'Route opzoeken van locatie A naar B. De verschillende transportmogelijkheden. Real time navigatie volgen.',
+      'De juiste bus/tram/trein zoeken. Tijd aflezen van hoe lang onderweg. Afstand in km lezen.',
+      'Openingsuren, adres en telefoonnummer aflezen. Website. "In de buurt"-functie gebruiken.',
+      'Tussenstops. Selecteren op beoordeling en prijs. Locaties opslaan.' ]},
+  ]}]},
+
+{ id:'dig3', domein:'digitaal', klasse:'digitaal-kaart', ms:'#2B579A', icoonTekst:'W', naam:'Ik werk met het programma Word.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'', f:[
+      'De leerling herkent het logo van Word en kan zelfstandig een nieuw Word-document openen. De leerling kan typen in een Word-document.',
+      'De leerling voert oefeningen uit rond de basisopmaak van een tekst.',
+      'De leerling kan gekende elementen toevoegen aan een document aan de hand van een instructievideo. De leerling vraagt soms hulp.',
+      'De leerling kan complexe elementen toevoegen aan een document op basis van geschreven instructies. De leerling past gevorderde tekstopmaak toe.',
+      'Digital native: de leerling gebruikt Word vlot en past zelfstandig basis- en gevorderde tekstopmaak toe. De leerling oriënteert zich moeiteloos binnen het programma en voegt zonder hulp tabellen, afbeeldingen en andere elementen toe aan een document.' ]},
+    { cat:'Voorbeelden', f:[
+      'Herkent het logo van Word. Nieuw Word-document openen.',
+      'Opmaak: B I U, kleur en lettergrootte. Bestandsnaam geven. Document delen.',
+      'Afbeelding kopiëren en plakken. Tabel invoegen en opmaken adhv videostappenplan. Document opslaan op de computer.',
+      'Document downloaden en uploaden op Word. Een tabel invoegen en opmaken adhv papieren instructie. Vormen invoegen. Uitlijnen en tekenen.',
+      'Pagina-einde, titels en koppen. Spellingscontrole. Tabellen gedetailleerd opmaken adhv papieren instructie. Vormen opmaken. Woorden zoeken vb. CTRL+F. Afdrukstand veranderen.' ]},
+  ]}]},
+
+{ id:'dig4', domein:'digitaal', klasse:'digitaal-kaart', ms:'#217346', icoonTekst:'X', naam:'Ik werk met het programma Excel.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'', f:[
+      'De leerling herkent het logo van Excel en kan zelfstandig een nieuw Excel-document openen. De leerling kan gegevens typen in Excel.',
+      'De leerling voert oefeningen uit rond de basisopmaak van gegevens in Excel aan de hand van een video.',
+      'De leerling voert oefeningen uit rond de basisformules in Excel.',
+      'De leerling maakt een Excel-document op. De leerling gebruikt functies.',
+      'De leerling stelt zelfstandig een Excel-document op. De leerling gebruikt functies om gewenste resultaten te krijgen.' ]},
+    { cat:'Voorbeelden', f:[
+      'Herkent het logo van Excel. Nieuwe Excel openen. Gegevens invullen.',
+      'Opmaak: vet, randen, kleur. Cellen lezen: A1, … Bestandsnaam geven. .csv delen.',
+      'Aan de hand van een video verschillende functies uitvoeren: SOM, GEM. Opmaak van een Excel-document aan de hand van een stappenplan.',
+      'Aan de hand van een geschreven stappenplan verschillende functies uitvoeren: SOM, GEM, MIN, MAX, AANTAL. Celwaarde aanpassen: standaard, datum, valuta…',
+      'De leerling werkt zelfstandig met Excel. De leerling gaat zelfstandig op zoek naar oplossingen en functies (gebruik van internet/AI). Vaardigheden: lijsten aanmaken, grafiek invoegen, combinatie van functies, …' ]},
+  ]}]},
+
+{ id:'dig5', domein:'digitaal', klasse:'digitaal-kaart', ms:'#D24726', icoonTekst:'P', naam:'Ik werk met het programma Powerpoint.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'', f:[
+      'De leerling herkent het logo van PPT en kan een nieuwe presentatie openen.',
+      'De leerling kan een eenvoudige basispresentatie maken, zonder opmaak en extra elementen zoals foto\'s.',
+      'De leerling kan gekende elementen toevoegen aan een presentatie aan de hand van een instructievideo. De leerling vraagt soms hulp.',
+      'De leerling kan gekende en complexe elementen toevoegen aan een presentatie aan de hand van een papieren instructie. De leerling heeft geen hulp nodig.',
+      'De leerling kan complexe elementen toevoegen aan een presentatie. De leerling oriënteert zich moeiteloos binnen het programma. De leerling kan vormen en afbeeldingen opmaken.' ]},
+    { cat:'Voorbeelden', f:[
+      'Herkent het logo van PPT. Nieuwe PowerPoint openen. Titel schrijven.',
+      'Slide toevoegen. Indeling aanpassen. Onderscheid tekst-titel. Bestandsnaam aanpassen. Designer gebruiken. Bestand opslaan en delen.',
+      'Afbeeldingen, gifs en animaties invoegen adhv. een video-instructie.',
+      'Dia dupliceren. Diavoorstelling starten. Afbeeldingen, gifs, animaties en overgangen invoegen adhv. papieren instructies. Vormen invoegen.',
+      'Zonder een instructie animaties, gifs, animaties en overgangen invoegen. Opmaak van vormen. Opmaak van afbeelding (vb. bijsnijden).' ]},
+  ]}]},
+
+// ═══════════════════════════════════════════════════════════════
+// TECHNIEK EN PRAKTIJK
+// ═══════════════════════════════════════════════════════════════
+{ id:'tech1', domein:'techniek', klasse:'techniek-kaart', icoon:'📐', naam:'Ik meet nauwkeurig met een meetinstrument.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'', f:[
+      'Ik benoem het meetinstrument. Ik houd deze correct vast en (indien van toepassing) zet deze aan en uit.',
+      'Ik benoem meerdere meetinstrumenten. Ik gebruik die vanaf de nulstand.',
+      'Ik lees gehele getallen af van een meetinstrument. Ik gebruik een meetinstrument en kan een bepaalde waarde aanduiden.',
+      'Ik lees tussenwaarden (mm, gram, deciliter, …) af en pas dit toe in een opdracht. Ik gebruik een meetinstrument correct en lees de waarden correct af.',
+      'Ik gebruik verschillende meetinstrumenten en controleer mijn metingen zelfstandig. Ik kan tot op de decimalen een meetinstrument correct gebruiken en de maten omzetten.' ]},
+    { cat:'Voorbeelden', f:[
+      'Benoemen van een lat en een weegschaal. Een lijn trekken met een lat.',
+      'Benoemen van een lat, een meter, een rolmeter, weegschaal, maatbeker… De lat bij nul zetten wanneer ze iets opmeten. De weegschaal TARE zetten.',
+      'Een plooimeter aflezen: 5cm. Aan de hand van instructies een tekening opstellen met de juiste maten. Met een liniaal een stuk koperdraad op 10cm afknippen.',
+      'De diameter van een buis aflezen met een schuifmaat op 3,6cm. Een lijnstuk tekenen van 50mm. Zelfstandig van een schaaltekening een 1:1 schaal tekenen.',
+      'Een schuifmaat, rolmeter, maatbeker, digitale weegschaal… gebruiken. 5,2cm aflezen en als 52mm noteren. Een winkelhaak gebruiken om een haakse lijn te tekenen.' ]},
+  ]}]},
+
+{ id:'tech2', domein:'techniek', klasse:'techniek-kaart', icoon:'⛑️', naam:'Ik werk op een veilige manier met gereedschap en materialen.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'', f:[
+      'Ik benoem wat een veilige en een onveilige situatie is in het algemeen. Ik ken en benoem de belangrijkste veiligheidsafspraken in de klas/werkplaats. Ik respecteer de basisafspraken in de werkplaats.',
+      'Ik toon en benoem de gevaren in het atelier. Ik pas veiligheidsregels toe bij eenvoudige taken en gebruik van materialen.',
+      'Ik benoem de specifieke veiligheidsregels in het atelier. Ik respecteer automatisch de basisafspraken in de werkplaats. (Spontaan toepassen)',
+      'Ik hou me aan de specifieke veiligheidsafspraken in het atelier. Ik werk zelfstandig, herken risico\'s en pas mijn werkmethode daarop aan.',
+      'Ik handel veilig in het atelier en hou me aan de preventieve veiligheidsafspraken. Ik anticipeer op mogelijke onveilige situaties en spreek hier anderen op aan. Ik toon voorbeeldgedrag: ik werk veilig, herinner anderen vriendelijk aan regels en zorg mee voor een veilige werkomgeving.' ]},
+    { cat:'Voorbeelden', f:[
+      'Ik draag een werkjas in het praktijklokaal. Ik was mijn handen voor ik de groenten snijd.',
+      'Ik draag het gepaste veiligheidsmateriaal bij bepaalde machines.',
+      'Ik draag spontaan mijn werkjas in het praktijklokaal en draag de gepaste veiligheidsmaterialen.',
+      'Verkoop: alle stappen rond het veilig tillen (ergonomie) correct uitvoeren. Ik houd rekening met het gewicht. Werkt uitermate voorzichtig, garandeert veiligheid voor zichzelf en leerlingen in zijn/haar buurt.',
+      'Verkoop: alle stappen rond het veilig tillen (ergonomie) correct uitvoeren. Ik geef andere leerlingen feedback en spreek hen aan. Spontaan de veiligheidsafspraken volgen. Anderen aanspreken op hun materiaal en ondersteunen.' ]},
+  ]}]},
+
+{ id:'tech3', domein:'techniek', klasse:'techniek-kaart', icoon:'📋', naam:'Ik werk op basis van instructies een product succesvol af.',
+  tabs:[
+    { titel:'Leerlijn', rijen:[
+      { cat:'', f:[
+        'Ik begin aan het werkstuk en doe het voorbereidende werk: ik neem het correcte materiaal, ik leg mijn benodigdheden klaar, theoretische voorbereiding, etc.',
+        'Ik rond de voorbereiding van het werkstuk af en begin aan het product. Ik werk het niet af of voldoe niet aan de meeste criteria.',
+        'Ik werk het eindproduct af op voldoende wijze en voldoe aan de meeste criteria. Ik werk het eindproduct af met hulp van de leerkracht.',
+        'Ik werk het eindproduct tijdig af naar verwachting van de leerkracht (voldoet aan alle criteria). Ik werk het eindproduct af met een beetje hulp van de leerkracht.',
+        'Ik werk het eindproduct tijdig af boven de verwachting van de leerkracht (evt. uitbreidingscriteria). Ik werk het eindproduct zelfstandig af.' ]},
+      { cat:'Toelichting', f:[
+        'Ik begin te werken wanneer de leerkracht mij helpt opstarten. Ik volg de basisafspraken rond respect en veiligheid wanneer ik hieraan herinnerd word. Ik heb nog veel begeleiding nodig. Ik werk traag en met veel hulp, waardoor mijn product nog onvolledig of onnauwkeurig is.',
+        'Ik werk mee en toon meestal respect, maar verlies soms mijn focus of heb nog aansturing nodig. Ik kan al enkele stappen uitvoeren, maar maak nog fouten of sla stappen over. Ik werk traag en stel nog regelmatig vragen. Mijn product is grotendeels afgewerkt, maar bevat nog meerdere onnauwkeurigheden.',
+        'Ik werk geconcentreerd, toon respect en werk op mijn eigen tempo zonder te spelen. Ik volg het stappenplan grotendeels zelfstandig. Ik werk op een normaal tempo en vraag hulp wanneer dat nodig is. Mijn product is bruikbaar en grotendeels correct, met enkele kleine fouten.',
+        'Ik werk doelgericht, zelfstandig en toon voortdurend respect voor anderen en mijn omgeving. Ik volg het stappenplan zelfstandig en kan mijn aanpak aanpassen bij problemen. Ik werk efficiënt en probeer zelf oplossingen te vinden. Mijn product is correct, volledig en netjes afgewerkt.',
+        'Ik toon een voorbeeldige werkhouding en ben een rolmodel in respect en samenwerking. Ik werk planmatig en zelfstandig en kan anderen helpen met het stappenplan. Ik werk zeer efficiënt, denk vooruit en ondersteun anderen. Mijn product is van hoge kwaliteit: volledig correct, verzorgd en met extra aandacht voor detail.' ]},
+    ]},
+    { titel:'Rubric gedetailleerd', rijen:[
+      { cat:'Werkhouding', f:[
+        'Ik begin te werken wanneer de leerkracht dit vraagt en/of herhaalt.',
+        'Ik werk mee zonder veel afleiding, maar soms verlies ik focus.',
+        'Ik werk geconcentreerd en op eigen tempo, zonder te spelen.',
+        'Ik werk doelgericht en hou vol, ook bij moeilijkere taken.',
+        'Ik toon een voorbeeldige werkhouding: ik werk efficiënt, geconcentreerd en met inzet.' ]},
+      { cat:'Respect (leerkracht, leerling en materiaal)', f:[
+        'Ik volg basisregels van respect na een herinnering van de leerkracht.',
+        'Ik toon meestal respect voor leerkracht, klasgenoten en materiaal.',
+        'Ik toon consequent respect en zorg voor mijn werkplek en omgeving.',
+        'Ik hou actief rekening met anderen en help de klas netjes en veilig houden.',
+        'Ik toon voorbeeldgedrag in respect: ik ben een rolmodel voor anderen.' ]},
+      { cat:'Timing', f:[
+        'Ik heb veel tijd nodig om op te starten en taken af te ronden.',
+        'Ik werk traag, maar kan taken met extra tijd afmaken.',
+        'Ik werk op een normaal tempo en kan taken tijdig afwerken.',
+        'Ik werk efficiënt, hou goed mijn tempo en verlies geen tijd.',
+        'Ik werk zeer efficiënt, plan mijn tijd goed en kan zelfs extra taken aan.' ]},
+      { cat:'Stappenplan', f:[
+        'Ik heb veel hulp nodig om het stappenplan te begrijpen.',
+        'Ik volg enkele stappen met hulp, maar maak fouten of sla stappen over.',
+        'Ik volg het stappenplan grotendeels zelfstandig en mijn werk lukt meestal.',
+        'Ik volg het stappenplan zelfstandig en kan dit aanpassen bij problemen.',
+        'Ik werk volledig planmatig en kan anderen uitleggen hoe het stappenplan werkt.' ]},
+      { cat:'Zelfstandig werk', f:[
+        'Ik heb veel hulp nodig en wacht vaak op de leerkracht.',
+        'Ik probeer zelfstandig te werken, maar stel vaak vragen over dingen die letterlijk in het plan staan.',
+        'Ik werk grotendeels zelfstandig en vraag soms hulp over eenvoudige dingen.',
+        'Ik werk zelfstandig en probeer zelf problemen op te lossen.',
+        'Ik werk volledig zelfstandig en bied hulp aan anderen als ze vastlopen.' ]},
+      { cat:'Productevaluatie', f:[
+        'Mijn product is herkenbaar, maar nog onvolledig of onnauwkeurig.',
+        'Mijn product is grotendeels afgewerkt, maar bevat meerdere onnauwkeurigheden.',
+        'Mijn product is bruikbaar en grotendeels correct, met enkele kleine onnauwkeurigheden.',
+        'Mijn product is volledig correct, bruikbaar en netjes afgewerkt.',
+        'Mijn product is voorbeeldig: volledig correct, netjes afgewerkt en soms met extra zorg of detail boven verwachting.' ]},
+      { cat:'Totale evaluatie (/30)', f:['< 10','10-14','15-19','20-24','25-30'] },
+    ]},
+  ]},
+
+// ═══════════════════════════════════════════════════════════════
+// LEERSTRATEGIE
+// ═══════════════════════════════════════════════════════════════
+{ id:'leer1', domein:'leerstrategie', klasse:'leer-kaart', svg:mindmapSvg, naam:'Ik schematiseer de leerstof.',
+  tabs:[
+    { titel:'Mindmap', rijen:[
+      { cat:'Mindmap', f:[
+        'Ik brainstorm actief mee over een onderwerp: klassikaal en mondeling.',
+        'Ik vul een woordenwolk over een gekend thema aan met ondersteuning.',
+        'Ik maak zelfstandig een mindmap over een gekend thema zonder vertakkingen (1 niveau).',
+        'Ik maak zelfstandig een mindmap over een gekend thema met vertakkingen (2 niveaus).',
+        'Ik maak een visueel schema van een bepaald thema aan de hand van een zelfgekozen manier (mindmap, woordenwolk, boomstructuur, …).' ]},
+    ]},
+    { titel:'Samenvatten', rijen:[
+      { cat:'Samenvatting', f:[
+        'Ik duid belangrijke woorden aan in een zin.',
+        'Ik kan de hoofdgedachte benoemen per leerstofonderdeel of per tekst. (wat is het thema?)',
+        'Ik kan per alinea de kernzin/het kernwoord aanduiden/benoemen in een tekst.',
+        'Ik bundel de kernzinnen tot een korte samenvatting/verslag over een vertrouwd onderwerp. Ik maak een samenvatting met behulp van een schrijfkader op basis van een middelmatig moeilijke lees- of luistertekst.',
+        'Ik maak een gedetailleerde, goed gestructureerde samenvatting/verslag over een vertrouwd onderwerp met of zonder schrijfkader op basis van een complexe lees- of luistertekst.' ]},
+    ]},
+    { titel:'Informatie achterhalen', rijen:[
+      { cat:'Informatie achterhalen', f:[
+        'Ik lees of luister specifiek voor 1 vraag en achterhaal het antwoord.',
+        'Ik lees of beluister en geef antwoorden op de vooropgestelde eenvoudige W-vragen. Ik herlees of herbeluister meerdere keren.',
+        'Ik lees of beluister een fragment één keer en geef antwoorden op de vooropgestelde W-vragen.',
+        'Ik neem duidelijke notities op basis van een nieuwe luister- of leestekst met behulp van een schrijfkader met als doel: de tekst navertellen of de gesloten vragen te beantwoorden.',
+        'Ik neem zelfstandig duidelijke notities op basis van een nieuwe luister- of leestekst: de tekst navertellen of de open vragen te beantwoorden.' ]},
+    ]},
+  ]},
+
+{ id:'leer2', domein:'leerstrategie', klasse:'leer-kaart', icoon:'🧠', naam:'Ik gebruik memorisatietechnieken.',
+  tabs:[
+    { titel:'Memorisatietechnieken', rijen:[
+      { cat:'', f:[
+        'Op vraag van de leerkracht een woordenlijst aanvullen in de klas.',
+        'Op vraag van de leerkracht een andere memorisatietechniek dan de woordenlijst maken op school.',
+        'Op vraag van de leerkracht een memorisatietechniek thuis gebruiken en als voorbereiding meenemen naar de les.',
+        'Zelfstandig en spontaan een gekende voorbereiding maken en als voorbereiding meenemen naar de les.',
+        'Spontaan een techniek kiezen om grote leerstofpakketten te memoriseren.' ]},
+    ]},
+    { titel:'Woordenschat', rijen:[
+      { cat:'Woordenschat', f:[
+        'Ik herken de foto en koppel het aan een ingestudeerd woord.',
+        'Ik schrijf het ingestudeerde woord in de juiste zin, waarbij een selectie aan woorden gegeven zijn.',
+        'Ik maak een betekenisvolle zin met het woord, waarbij de nadruk ligt op betekenis en niet op vormcorrectheid. Mondeling of schriftelijk.',
+        'Ik maak een zin bij een afbeelding of foto zonder dat het woord gegeven is. Mondeling of schriftelijk.',
+        'Ik schrijf een korte tekst met verschillende ingestudeerde woorden. Woorden zijn gegeven en de leerlingen maken zelf een selectie. Een afbeelding is gegeven en ze beschrijven wat ze zien, gebruikmakend van de ingestudeerde woorden.' ]},
+      { cat:'Niveau', f:['Onthouden','Onthouden – begrijpen','Begrijpen – toepassen','Toepassen','Toepassen – creëren'] },
+    ]},
+    { titel:'Vakspecifieke woordenschat', rijen:[
+      { cat:'Vakspecifieke woordenschat', f:[
+        'Ik koppel de in te studeren vakspecifieke woordenschat aan een afbeelding.',
+        'Ik verbind, noteer of vertel de definitie van de in te studeren vakspecifieke woordenschat. Ik vul in te studeren woorden in de juiste zin (woorden en zinnen met "gaten" zijn gegeven).',
+        'Ik schrijf, gebruik in te studeren vakspecifieke woordenschat in een correcte en betekenisvolle zin.',
+        'Ik gebruik vakspecifieke woorden of begrippen correct en betekenisvol in een zin, in een tekst, een (spreek)oefening of in een mondeling gesprek.',
+        'Ik pas vakspecifieke kennis en begrippen toe in soortgelijke maar andere situaties.' ]},
+      { cat:'Voorbeeld', f:[
+        'Appel →',
+        'Een appel → een gezond stuk fruit. Meneer Emmanuel eet een rode _______.',
+        'De jongen eet een appel als gezond tussendoortje.',
+        'De jongen eet gezond want ik lees in de tekst dat hij een appel als gezond tussendoortje eet.',
+        'Peren en pruimen zijn fruitsoorten die in België groeien. Fruit is gezond. Fruit is perfect als gezond tussendoortje. Appels zijn ook een gezond tussendoortje.' ]},
+    ]},
+  ]},
+
+{ id:'leer3', domein:'leerstrategie', klasse:'leer-kaart', icoon:'🔤', naam:'Ik memoriseer woordenschat via woord-klankkoppeling. (ALFA)',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'Toelichting', f:['Leerlingen werken aan woordmemorisatie, leestekens, letter-klankkoppeling, woord-klankkoppeling, woord-beeldkoppeling om zodoende woordenschat vast te zetten binnen verschillende domeinen (godsdienst, etc.)','','','',''] },
+    { cat:'Luisteren', f:[
+      'Het woord horen en de juiste foto aanduiden.',
+      'Naar anderen luisteren; aangeven of het juist of fout is.',
+      'Auditief woordbeeld vormen: luisteren naar het woord en het correcte woord aanduiden.',
+      '',''] },
+    { cat:'Spreken', f:[
+      'Woorden nazeggen.',
+      'De leerling kan een woord mondeling produceren bij een afbeelding. (spreken)',
+      'Geschreven woorden luidop uitspreken. (teken-klank-koppeling)',
+      '',''] },
+    { cat:'Lezen', f:[
+      '','',
+      'De woorden lezen en linken aan een afbeelding.',
+      'Een woord lezen en schrijven bij een afbeelding/gebruiken in een zin obv een afbeelding.',
+      ''] },
+    { cat:'Schrijven', f:[
+      '','',
+      'Een eenvoudig woord bij een afbeelding kopiëren (gegeven in de opgave).',
+      'Een eenvoudig woord bij een afbeelding schrijven (niet gegeven in de opgave) (woordbeeld memoriseren).',
+      ''] },
+    { cat:'Oefeningen', f:[
+      'Dmv herhaling kunnen de leerlingen de objecten of foto\'s koppelen aan een gesproken woord: "Waar is de …?" met aanwijzen. Matchen: afbeelding ↔ gesproken woord. Simpele instructies uitvoeren (pak, geef, wijs…).',
+      'Dmv herhaling kunnen de leerlingen de objecten of foto\'s fonetisch benoemen in de les: Wat is dit? Benoemen wat je ziet "Ik zie een …".',
+      'Dmv herhaling kunnen de leerlingen aangeleerde woorden uit een domein lezen, te beginnen bij eenvoudige mkm-woorden. Nadien kunnen leerlingen het gelezen woord aanduiden in een reeks afbeeldingen.',
+      'De leerlingen kunnen een eenvoudig aangeleerd woord correct schrijven bij een afbeelding of invullen in een zin op basis van een afbeelding.',
+      ''] },
+  ]}]},
+
+{ id:'leer4', domein:'leerstrategie', klasse:'leer-kaart', svg:artikelSvg, naam:'Ik heb inzicht in de structuur van een tekst.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'', f:[
+      'Ik kan de titel en het teksttype van een tekst aanduiden/benoemen.',
+      'Ik kan de tussentitels, de auteur, de datum en de bron bepalen.',
+      'Ik kan de inleiding, het midden en het slot van een tekst aanduiden. Ik bepaal de hoofdgedachtes van de tekst en de alinea\'s op basis van de titels, tussentitels en afbeeldingen.',
+      'Ik geef aan welke informatie ik in welk deel van de tekst kan terugvinden. Ik benoem het tekstdoel van de tekst. Ik benoem de tekstsoort van de tekst. Ik benoem of de tekst subjectief of objectief is.',
+      'Ik kan de hoofdgedachtes van twee verschillende teksten met elkaar vergelijken. Ik bepaal de gedachtegang in een tekst. Ik kan kritisch nadenken over de betrouwbaarheid van de bronnen. Ik benoem of de tekst subjectief of objectief is en beargumenteer.' ]},
+    { cat:'Voorbeelden', f:[
+      'Krantenartikel uit Wablieft → titel aanduiden. De titel van een boek. Teksttype: boek, krantenartikel, cursus, …',
+      'Een krantenartikel uit Wablieft, tekstboeken NT2 of basisonderwijs.',
+      'Een authentiek artikel uit Zonnekind, Wablieft, tekstboeken NT2 of basisonderwijs…',
+      'Een tekst uit een authentiek tekstboek van het basis- of secundair onderwijs. Nieuwsbegrip. SAM (krant van de school).',
+      'Authentiek lesboek van secundair onderwijs. Bron van BBC Comedy/bron van VRT Nu → Welke is het meest betrouwbaar? Fake news achterhalen?' ]},
+  ]}]},
+
+{ id:'leer5', domein:'leerstrategie', klasse:'leer-kaart', icoon:'💡', naam:'Ik los problemen op door de lesinhoud kritisch toe te passen.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'Begrip', f:[
+      'Ik weet waar de les over gaat.',
+      'Ik begrijp ideeën of concepten uit de les en kan deze benoemen.',
+      'Ik leg ideeën of concepten uit de les uit en kan ze classificeren.',
+      'Ik kan het belang van iets illustreren op basis van de kennis uit de les.',
+      'Ik pas de leerstof toe op nieuwe situaties en toon inzicht (inzichtsvragen, toepassen, …).' ]},
+    { cat:'Strategieën', f:[
+      'Ik vraag hulp aan de leerkracht om verder te kunnen werken.',
+      'Ik vraag hulp aan de leerkracht of aan een medeleerling om verder te kunnen werken.',
+      'Ik herlees de instructie voordat ik hulp vraag om verder te kunnen werken.',
+      'Ik ga zelfstandig op zoek naar hulpmiddelen op het internet en in mijn werkboek om zelfstandig verder te kunnen werken.',
+      'Ik ga zelfstandig op zoek naar hulpmiddelen op het internet en in mijn werkboek om anderen verder te kunnen laten werken.' ]},
+    { cat:'Informatie verzamelen', f:[
+      'Ik kan vertellen wat ik weet over een onderwerp.',
+      'Ik kan vertellen wat ik weet over een onderwerp en mijn persoonlijke ervaringen linken.',
+      'Ik kan mijn voorkennis aanvullen door informatie te verzamelen en te selecteren.',
+      'Ik verzamel informatie van verschillende bronnen en selecteer de beste informatie.',
+      'Ik raadpleeg meerdere bronnen en zoek overeenkomsten.' ]},
+    { cat:'Betrouwbare info', f:[
+      'Ik duid de bron aan van een tekst (als deze duidelijk gegeven is).',
+      'Ik benoem betrouwbare informatiebronnen (bv. de krant).',
+      'Ik benoem en herken betrouwbare informatiebronnen.',
+      'Ik benoem of de tekst subjectief of objectief is (link: tekststructuren).',
+      'Ik onderscheid betrouwbare info en onbetrouwbare info en leg uit waarom iets (on)betrouwbaar is door kritische vragen te stellen.' ]},
+    { cat:'Linken leggen', f:[
+      'Ik herken een thema uit een andere les wat expliciet aan bod gekomen is (gestuurd door de leerkracht).',
+      'Ik herken een thema uit een andere les wat expliciet aan bod gekomen is en ik vertel wat ik me herinner. (lk-gestuurd)',
+      'Ik herken spontaan een thema uit een andere les en vertel wat ik hierover weet.',
+      'Ik kan thema\'s die impliciet aan bod kwamen in andere lessen linken aan de leerstof.',
+      'Ik kan info die impliciet aan bod kwam in verschillende vakken aan elkaar linken. Ik herken en benoem de verschillende perspectieven.' ]},
+    { cat:'Bronnen', f:[
+      'Ik herken bronnen en benoem het onderwerp (indien het voor de hand ligt).',
+      'Ik benoem het thema en de hoofdgedachte bij authentieke bronnen.',
+      'Ik haal de belangrijkste informatie uit een authentieke bron en geef antwoorden op inhoudelijke vragen over deze bron.',
+      'Ik beschrijf authentieke bronnen en link ze aan het vakgebied.',
+      'Ik beschrijf en vergelijk 2 of meerdere authentieke bronnen. Ik situeer de bronnen ook binnen de tijd en ruimte.' ]},
+  ]}]},
+
+// ═══════════════════════════════════════════════════════════════
+// GODSDIENST
+// ═══════════════════════════════════════════════════════════════
+{ id:'gods1', domein:'godsdienst', klasse:'gods-kaart', icoon:'🙏', naam:'Ik benoem wat ik belangrijk vind.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'', f:[
+      'Ik benoem het thema en/of het lesonderwerp.',
+      'Ik duid een keuze aan gelinkt aan het lesonderwerp: Eens/oneens, Juist/fout, Belangrijk/onbelangrijk.',
+      'Ik geef mijn mening over het thema zelfstandig in woorden of in korte zinnen met hulp en sturing van de leerkracht.',
+      'Ik geef mijn mening in correcte zinnen. Ik benoem in zinnen wat ik belangrijk vind.',
+      'Ik geef mijn mening over het thema, geef aan wat ik belangrijk vind en waarmee ik akkoord/niet akkoord ga en beargumenteer deze keuze.' ]},
+    { cat:'Geloof', f:[
+      'Ik benoem in wat of wie ik geloof.',
+      'Ik benoem wat ik fijn vind aan mijn eigen geloof. Ik link het aan mijlpalen in mijn leven.',
+      'Ik benoem wat ik fijn vind aan mijn eigen geloof en wat ik waardeer aan andere religies.',
+      'Ik benoem welke invloed mijn eigen geloof heeft op mijn leven.',
+      'Ik benoem welke invloed geloof heeft op de samenleving. Ik benoem welke invloed verschillende religies hebben op mijn dagdagelijkse leven.' ]},
+  ]}]},
+
+{ id:'gods2', domein:'godsdienst', klasse:'gods-kaart', icoon:'⛪', naam:'Ik benoem kenmerken van verschillende godsdiensten.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'Godsdiensten', f:[
+      'Ik benoem een godsdienst en geef het symbool.',
+      'Ik benoem de gebedshuizen, de religieuze leiders en de religieuze geschriften.',
+      'Ik link de godsdiensten aan de thema\'s in de klas.',
+      'Ik vergelijk de godsdiensten met elkaar.',
+      'Ik link godsdiensten en haar kenmerken aan de samenleving buiten de les en de actualiteit.' ]},
+    { cat:'Feesten', f:[
+      'Ik benoem het feest.',
+      'Ik benoem de religie bij een feest.',
+      'Ik benoem de kenmerken en activiteiten gelinkt aan feesten.',
+      'Ik vat het feest samen aan de hand van een presentatie of een poster.',
+      'Ik benoem de (religieuze) betekenis van het feest.' ]},
+  ]}]},
+
+{ id:'gods3', domein:'godsdienst', klasse:'gods-kaart', icoon:'❤️', naam:'Ik heb respect voor iedereen door rekening te houden met elkaars grenzen.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'Respect', f:[
+      'Ik neem deel aan de les door te luisteren naar anderen en een veilig klasklimaat te bewaren.',
+      'Ik luister naar andere leerlingen en neem actief deel aan gesprekken over het lesonderwerp.',
+      'Ik respecteer de mening van anderen en de grenzen van anderen. Ik kan me aan de klasafspraken houden.',
+      'Ik respecteer de mening van anderen en de grenzen van anderen. Ik houd me aan de afspraken en kan in groep tot groepsafspraken komen.',
+      'Ik werk productief samen met anderen en stel me respectvol op naar alle medeleerlingen.' ]},
+    { cat:'Maatschappelijke thema\'s', f:[
+      'Ik ken de maatschappelijke thema\'s die in de les zijn behandeld. Ik benoem deze thema\'s.',
+      'Ik luister naar informatie over een maatschappelijk thema zonder emotioneel te reageren.',
+      'Ik vertel over een maatschappelijk thema op basis van een aangeboden video/gesprek/tekst.',
+      'Ik stel opgestelde vragen aan anderen en luister rustig naar hun antwoorden over maatschappelijke thema\'s. Ik blijf hierbij rustig.',
+      'Ik blijf rustig en respectvol in gesprekken over verschillende maatschappelijke thema\'s. Ik luister actief en stel vragen. Ik kijk mijn gesprekspartners aan en veroordeel niks. Ik blijf rustig.' ]},
+  ]}]},
+
+// ═══════════════════════════════════════════════════════════════
+// WISKUNDE – REKENTAAL
+// ═══════════════════════════════════════════════════════════════
+{ id:'wisk1', domein:'wiskunde', klasse:'rekentaal-kaart', icoon:'🔢', naam:'Ik benoem cijfers en getallen correct.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'', f:[
+      'Ik zet de getallen (tussen 0 en 20) correct op een getallenlijn van klein naar groot. Ik ken het verschil tussen cijfers en getallen. Ik schrijf de getallen tussen 0 en 20 voluit.',
+      'Ik benoem getallen tot 99 correct én zet ze op een correcte volgorde op een getallenlijn van klein naar groot en groot naar klein. Ik ken het verschil tussen cijfers en getallen. Ik schrijf de getallen tussen 0 en 99 in cijfers en woorden.',
+      'Ik benoem getallen tot 999 correct en zet ze op een getallenlijn. Ik ken het verschil tussen cijfers en getallen. Ik schrijf de getallen tussen 0 en 999 in cijfers. Rangtelwoorden.',
+      'Ik benoem getallen tot 9.999 correct. Ik zet ze op een getallenlijn en ken het verschil tussen cijfers en getallen. Ik schrijf de getallen tussen 0 en 9.999 voluit in cijfers.',
+      'Ik benoem getallen tot oneindig correct, inclusief de rangtelwoorden. Ik zet ze op een getallenlijn, ook al is het patroon anders (stappen van 2, verdubbelingen, etc.) en ken het verschil tussen cijfers en getallen.' ]},
+  ]}]},
+
+{ id:'wisk2', domein:'wiskunde', klasse:'rekentaal-kaart', svg:abcSvg, naam:'Ik gebruik de wiskundewoorden.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'Niveau', f:['Ik begrijp de bewerkingstekens en gelijkheidstekens correct.','Benoemen en begrijpen in woorden.','Benoemen en begrijpen in zinnen.','Benoemen, begrijpen en toepassen in opgaves.','Benoemen, begrijpen en toepassen (schriftelijk en mondeling) in vraagstukken.'] },
+    { cat:'Rekentaal', f:[
+      'Voor, na, tussen.',
+      'Meer – minder. Groter dan, kleiner dan. Gelijk. Even groot. Het getal. Het cijfer.',
+      'Woorden vorige kolommen in zinnen: Ik neem X af van X. Ik tel X op bij X. Ik verdubbel. Abstracte woorden: de helft, dubbel, een kwart, het geheel, korter/langer, samen, korting, weg.',
+      'Hoofdstuk-specifieke woorden in zinnen: erop, eraf, erbij, verminderen, vermeerderen. Vraagstukken. -voud: tweevoud, zesvoud… de: één tweede, één vierde…',
+      'Alle voorgaande + toepassen.' ]},
+    { cat:'Rekenen', f:[
+      'Plus, min, maal/keer, gedeeld door, is gelijk aan.',
+      'Optellen, de optelling, het plusteken. Aftrekken, de aftrekking, het minteken. Vermenigvuldigen, het maalteken. Delen, het deelteken. Het gelijkheidsteken. Product/som/verschil/quotiënt.',
+      'De macht, tot de tweede, in het kwadraat, de wortel, de vierkantswortel. Termen/factoren.',
+      'De haakjes. De exponent. Het grondtal.',
+      '' ]},
+    { cat:'Decimalen', f:[
+      'Negatief. Positief. Het getal. Voor – na/achter.',
+      'De komma. Het kommagetal. Cijfers na de komma. Ongeveer/circa/plusminus. Schatten.',
+      'De tiende. De honderdste. De hele getallen. Anderhalf. Half.',
+      'De decimalen afronden.',
+      'Reëel, rationele getallen, verzamelingen.' ]},
+    { cat:'Breuken', f:[
+      'Het deel. Het stuk. Het totaal. Gelijk.',
+      'De breuk. De helft/halve. Het geheel/hele. 1 op … Gelijke delen/stukken verdelen.',
+      'Rangtelwoorden (één vierde). De noemer. De teller. Het gebroken getal. Een heel getal. De breukstreep.',
+      'Vereenvoudigen. Gelijknamig.',
+      'Grootste gemene deler. Kleinste gemeenschappelijke veelvoud.' ]},
+  ]}]},
+
+{ id:'wisk3', domein:'wiskunde', klasse:'rekentaal-kaart', svg:vraagSvg, naam:'Ik los vraagstukken stapsgewijs op.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'', f:[
+      'Ik haal de letterlijke gegevens uit een eenvoudige en korte instructie.',
+      'Ik haal de letterlijke gegeven en de gevraagde informatie uit een eenvoudige en korte instructie.',
+      'Ik haal de letterlijke gegeven en gevraagde informatie uit een instructie en neem stappen om het vraagstuk op te lossen.',
+      'Ik haal de gegeven en gevraagde informatie uit een instructie met (abstracte) wiskundewoorden en neem stappen om het vraagstuk op te lossen.',
+      'Ik haal meerdere gegeven en gevraagde informatie uit een vraagstuk met meerdere (abstracte) wiskundewoorden en los het vraagstuk op. Ik formuleer een antwoord met de correcte meeteenheden.' ]},
+    { cat:'Voorbeeld', f:[
+      'In een recept staat: "Gebruik 80 ml olijfolie." Hoeveel milliliter olijfolie moet je gebruiken? Antwoord: 80 ml.',
+      '','','','' ]},
+  ]}]},
+
+// GETALLENLEER
+{ id:'wisk4', domein:'wiskunde', klasse:'getallen-kaart', icoon:'🧮', naam:'Ik reken met natuurlijke getallen.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'', f:[
+      'Ik los opgaves op met de basisbewerkingen (optellen, aftrekken) tot 20. Zonder en met brug.',
+      'Ik los opgaves op met de basisbewerkingen (optellen, aftrekken) tot 100. Foutloos zonder brug. Introductie met brug. Ik maak kennis met de maal- en deeltafels.',
+      'Ik los opgaves op met de basisbewerkingen (optellen, aftrekken) tot 1000 (met brug). Ik los opgaves op met de basisbewerkingen (delen, vermenigvuldigen) tot 100 (maaltafels).',
+      'Ik los opgaves op met de basisbewerkingen (optellen, aftrekken, delen, vermenigvuldigen) tot 10.000, inclusief machten tot de 2e en vierkantswortels. Volgorde van vergelijkingen.',
+      'Ik los opgaves op met de basisbewerkingen (optellen, aftrekken, delen, vermenigvuldigen) tot 100.000, inclusief alle machten en wortels.' ]},
+    { cat:'Niveau', f:['Wiskunde basis','Wiskunde gemiddeld','Wiskunde gemiddeld +','Wiskunde sterk',''] },
+  ]}]},
+
+{ id:'wisk5', domein:'wiskunde', klasse:'getallen-kaart', svg:kommaSvg, naam:'Ik reken met kommagetallen.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'', f:[
+      'Ik duid gehele positieve en negatieve getallen aan op de getallenlijn.',
+      'Ik duid positieve en negatieve (komma)getallen aan op de getallenlijn tot twee cijfers na de komma. Rekenen met tijd, geld en afstand (metend rekenen).',
+      'Ik kan kommagetallen optellen en aftrekken in combinatie met gehele getallen. Ik kan kommagetallen optellen en aftrekken met hetzelfde aantal decimalen.',
+      'Ik kan kommagetallen optellen en aftrekken met verschillend aantal decimalen. Ik kan kommagetallen delen en vermenigvuldigen tot twee cijfers na de komma. Ik rond mijn uitkomst af op het gevraagde aantal decimalen.',
+      'Ik kan kommagetallen optellen, aftrekken, delen en vermenigvuldigen tot twee cijfers na de komma waarbij het resultaat positief en negatief kan zijn. Ik rond mijn uitkomst af op het gevraagde aantal decimalen.' ]},
+    { cat:'Rekentaal', f:[
+      'Negatief. Positief. Het getal. Voor – na.',
+      'Cijfers na de komma. Het kommagetal.',
+      'De tiende. De honderdste. De hele getallen.',
+      'De decimalen afronden.',
+      'Reëel, rationele getallen, verzamelingen.' ]},
+  ]}]},
+
+{ id:'wisk6', domein:'wiskunde', klasse:'getallen-kaart', icoon:'½', isHalf:true, naam:'Ik reken met breuken.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'', f:[
+      'Ik tel het aantal aangeduide delen van een taart en noteer het als uitgeschreven breuk: 1 van de 4 delen.',
+      'Ik tel het aantal aangeduide delen van een taart en noteer het als breuk: 1/4. Ik visualiseer breuken.',
+      'Ik kan breuken vereenvoudigen. Ik tel gelijknamige breuken op. Ik trek gelijknamige breuken af.',
+      'Ik kan breuken vereenvoudigen en omzetten. Vermenigvuldigen en delen. Ik kan gelijknamige breuken optellen en aftrekken.',
+      'Ik vermenigvuldig en deel met breuken. Ik kan breuken vereenvoudigen en omzetten. Ik kan ongelijknamige breuken optellen en aftrekken. Kleinste gemene veelvoud. Grootste gemene deler.' ]},
+    { cat:'Rekentaal', f:[
+      'Het deel. Het stuk. Het totaal. Gelijk.',
+      'De breuk. De helft/halve. Het geheel/hele. Het kwart. 1 op … Gelijke delen/stukken verdelen.',
+      'Rangtelwoorden (één vierde). De noemer. De teller. Het gebroken getal. Een heel getal. De breukstreep.',
+      'Vereenvoudigen. Gelijknamig.',
+      'Grootste gemene deler. Kleinste gemeenschappelijke veelvoud.' ]},
+  ]}]},
+
+// HOEVEELHEDEN
+{ id:'wisk7', domein:'wiskunde', klasse:'hoeveel-kaart', icoon:'⚖️', naam:'Ik benoem de correcte inhoud, massa en/of lengte.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'', f:[
+      'Ik duid eenheden aan in een tekst (prijs uit folder, afmeting in cm uit tekst, gewicht op kassabon).',
+      'Ik koppel de eenheden aan grootheden: kilo → gewicht, meter → afstand, liter → inhoud, euro → prijs. Ik schat de uitkomst/hoeveelheid: het gewicht, de afstand, de inhoud, de prijs.',
+      'Ik lees waarden af binnen één eenheid per grootheid: Hoeveel centimeter? Hoeveel gram? Hoeveel euro? Hoeveel liter?',
+      'Ik benoem de waarde binnen één waarde gedetailleerd tot één getal na de komma. Met een lat/geodriehoek, in een inhoudsmaatbeker, op een weegschaal. Ik reken met gelijke eenheden: cm + cm, kg - kg.',
+      'Ik zet inhoudsmaten, lengtematen en massamaten om.' ]},
+  ]}]},
+
+// METEND REKENEN
+{ id:'wisk8', domein:'wiskunde', klasse:'meten-kaart', icoon:'🔺', naam:'Ik onderscheid meetkundige objecten in het vlak.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'', f:[
+      'Ik benoem de basisfiguren op basis van hun aantal hoeken: vierhoeken, driehoeken, vijfhoeken.',
+      'Ik benoem de vlakke figuren: vierkant, rechthoek, driehoek, cirkel. Ik benoem de lijn: rechte lijn, kromme lijn, gebroken lijn.',
+      'Ik benoem de basisfiguren en hun eigenschappen: hoeken, zijden, parallel/evenwijdig, loodrecht, gelijk. Ik benoem rechten: de rechte, de halfrechte, het lijnstuk, het punt.',
+      'Ik benoem alle vlakke figuren en hun eigenschappen: trapezium, parallellogram, ovaal, ruit.',
+      'Ik benoem alle vlakke figuren en hun specifieke lijnen en eigenschappen: bissectrice, diagonaal, overstaande hoeken, graden.' ]},
+  ]}]},
+
+{ id:'wisk9', domein:'wiskunde', klasse:'meten-kaart', icoon:'✏️', naam:'Ik teken meetkundige objecten.',
+  tabs:[{ titel:'Vlakke figuren tekenen', rijen:[
+    { cat:'Figuren tekenen', f:[
+      'Ik teken een vlak figuur zonder afmetingen.',
+      'Ik teken een vlak figuur zonder afmetingen met een liniaal.',
+      'Ik teken een vlak figuur met afmetingen met een liniaal. (zonder aangepaste hoeken)',
+      'Ik teken nauwkeurig (op de mm juist) een vlak figuur met afmetingen met een liniaal en geodriehoek met aangepaste hoeken.',
+      'Ik teken nauwkeurig (op de mm juist) een vlak figuur met afmetingen voor zijden en hoeken met een geodriehoek. Ik teken ook middeloodlijnen en diagonalen. Ik teken cirkels en bissectrices mbv een passer.' ]},
+    { cat:'Rechten tekenen', f:[
+      'Ik teken een rechte, kromme of gebroken lijn obv instructies.',
+      'Ik teken rechte lijnen met een lat obv instructies.',
+      'Ik teken rechte lijnen met een lat en gebruik de correcte notities en/of afmetingen.',
+      'Ik teken verschillende rechten met een lat obv instructies. Ik hou rekening met de onderlinge verhoudingen in het vlak: loodrecht, snijdend, parallel, hoeken.',
+      'Ik teken verschillende rechten met een lat obv instructies. Ik hou rekening met de onderlinge verhoudingen in de ruimte: loodrecht, snijdend, kruisend, parallel, hoeken.' ]},
+  ]}]},
+
+{ id:'wisk10', domein:'wiskunde', klasse:'meten-kaart', icoon:'📐', naam:'Ik bereken omtrek, oppervlakte en volume.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'', f:[
+      'Ik bereken de omtrek van eenvoudige figuren: vierkant, driehoek, rechthoek. Elke zijde is gegeven als natuurlijk getal in dezelfde eenheid.',
+      'Ik bereken de omtrek van alle veelhoeken. Elke zijde is gegeven in dezelfde eenheid. Waarden bekend.',
+      'Ik bereken zowel omtrek als oppervlakte van eenvoudige figuren: vierkant, driehoek, rechthoek, parallellogram, trapezium, ruit, vlieger. Niet elke zijde is gegeven: parallelle waarden kunnen aflezen, zijden berekenen.',
+      'Ik bereken de omtrek en oppervlakte van alle vlakke figuren. Sommige zijden zijn niet gegeven. Voor driehoeken bereken ik alle zijden (stelling van Pythagoras). Ik reken met pi (cirkels). Zijden zijn niet noodzakelijk weergegeven in dezelfde eenheid.',
+      'Ik bereken het volume en de oppervlakte van ruimtefiguren: balk, cilinder, bol, kegel, piramide, …' ]},
+  ]}]},
+
+// REKENEN MET LETTERS
+{ id:'wisk11', domein:'wiskunde', klasse:'letters-kaart', icoon:'🔡', naam:'Ik reken met letters.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'', f:[
+      'Ik toon aan dat een vorm een getal kan voorstellen. Ik schrijf de uitkomst van eenvoudige sommen met figuren/letters/vormen met gekende waarden.',
+      'Ik toon aan dat een letter een cijfer kan voorstellen. Ik vul de gekende waarde van een letter in een eenvoudige bewerking.',
+      'Ik bereken de waarde van een letter in een vergelijking. Ik pas de regel van drie toe om de onbekende waarde te berekenen (bv. eenheidswaarde) al dan niet op basis van een eenvoudig vraagstuk.',
+      'Ik los vergelijkingen op met één onbekende. Ik pas de regel van drie toe om de onbekende waarde te berekenen op basis van een vraagstuk.',
+      'Ik los vergelijkingen op met één onbekende (incl. breuken, machten en wortels). Ik stel zelf een vergelijking op op basis van een vraagstuk.' ]},
+    { cat:'Voorbeelden', f:[
+      '⃝ = 3 en Δ = 2 → ⃝ + Δ = 5',
+      'a=5, b=4 → a+b = 5+4 = 9. a=5 → 25 – a = 20.',
+      '25-a=13 → a=12. Regel van drie: 3kg appels kosten €6. Hoeveel kost 4kg appels?',
+      '⇔ 4x + 7 = 3x - 5 ⇔ x = -12. Vraagstuk met meerdere producten en prijzen.',
+      '⇔ 2x-82=5+32-3x ⇔ x=17. Er zijn drie broers. De oudste is dubbel zo oud als de jongste. De middelste is 3 jaar ouder dan de jongste. Samen zijn ze 51 jaar oud. Stel een vergelijking op.' ]},
+  ]}]},
+
+// GEGEVENS AFLEZEN
+{ id:'wisk12', domein:'wiskunde', klasse:'gegevens-kaart', icoon:'📊', naam:'Ik interpreteer de gegevens in een tabel correct.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'', f:[
+      'Ik lees de informatie af van een tabel met één variabele (bv. prijs per leeftijd) waarbij de variabele per enkele eenheid is weergeven. Bv. 0 jaar: gratis, 1 jaar: gratis, 2 jaar: €1…',
+      'Ik lees de informatie af van een tabel met één variabele (bv. prijs per leeftijd) waarbij de variabele per interval is weergeven. Bv. 0-2 jaar: gratis, 2-5 jaar: €1, 5+: €2.',
+      'Ik lees de informatie af van een tabel met twee variabelen, bv. data voor mannen en vrouwen.',
+      'Ik lees percentages en andere waarden af van verschillende grafische voorstellingen: staafdiagram, cirkeldiagram, tabel, histogram, lijndiagram, frequentietabellen.',
+      'Ik lees, interpreteer en vergelijk data uit verschillende grafische voorstellingen.' ]},
+  ]}]},
+
+{ id:'wisk13', domein:'wiskunde', klasse:'gegevens-kaart', icoon:'📈', naam:'Ik stel een grafische voorstelling van gegevens op.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'', f:[
+      'Ik tel het aantal gegevens per categorie.',
+      'Ik tel het aantal gegevens per categorie en zet de categorieën op volgorde op basis van frequentie.',
+      'Ik maak een beelddiagram van een hoeveelheid per eenheid.',
+      'Ik maak een eenvoudig staafdiagram met de categorieën als x-as en de frequentie als y-as (frequentie-eenheid = 1).',
+      'Ik maak op basis van een tekst of een andere grafische voorstelling een eigen gekozen grafische voorstelling van de gegevens.' ]},
+  ]}]},
+
+{ id:'wisk14', domein:'wiskunde', klasse:'gegevens-kaart', svg:gaussSvg, naam:'Ik bereken de centrummaten.',
+  tabs:[{ titel:'Leerlijn', rijen:[
+    { cat:'', f:[
+      'Ik duid de middelste waarde aan in een getallenrij.',
+      'Ik benoem de meest voorkomende waarde in een getallenrij.',
+      'Ik zet alle waarden in een chronologische volgorde en duid de mediaan aan.',
+      'Ik bereken het gemiddelde (zonder dat het resultaat een kommagetal is).',
+      'Ik bereken het gemiddelde en de mediaan. Ik vergelijk deze twee waarden.' ]},
+  ]}]},
+];
+
+const klasseNamen = {
+  'cultuur-kaart':    'Cultuur',
+  'tijdruimte-kaart': 'Tijd en ruimte',
+  'digitaal-kaart':   'Digitale vaardigheden',
+  'techniek-kaart':   'Techniek en praktijk',
+  'leer-kaart':       'Leerstrategie',
+  'gods-kaart':       'Godsdienst',
+  'rekentaal-kaart':  'Rekentaal',
+  'getallen-kaart':   'Getallenleer',
+  'hoeveel-kaart':    'Hoeveelheden',
+  'meten-kaart':      'Meetkunde',
+  'letters-kaart':    'Algebra',
+  'gegevens-kaart':   'Gegevens aflezen',
+};
+
+// ─── BATTERIJ BOUWEN ──────────────────────────────────────────────────────────
+function maakBatterij(fase) {
+  const kleuren=['#FF3B30','#FF9500','#FFCC00','#A8E063','#34C759'];
+  let streepjes='';
+  for(let i=1;i<=5;i++) streepjes+=i<=fase?`<div class="batterij-streep" style="background:${kleuren[i-1]};height:6px;border-radius:2px;"></div>`:'<div class="batterij-streep" style="background:#E8EAF0;height:6px;border-radius:2px;"></div>';
+  return `<div class="batterij-wrap"><div class="batterij-top"></div><div class="batterij-body">${streepjes}</div><div class="fase-nummer">Fase ${fase}</div></div>`;
+}
+
+// ─── BOUW NAVIGATIE & SECTIES ─────────────────────────────────────────────────
+const domeinContainer=document.getElementById('domein-container');
+const navKnoppen=document.getElementById('nav-knoppen');
+
+domeinen.forEach((domein,di)=>{
+  const navKnop=document.createElement('button');
+  navKnop.className='nav-domein'+(di===0?' actief':'');
+  navKnop.textContent=domein.naam;
+  navKnop.onclick=()=>{
+    document.querySelectorAll('.nav-domein').forEach(k=>k.classList.remove('actief'));
+    navKnop.classList.add('actief');
+    document.querySelectorAll('.domein-sectie').forEach(s=>s.classList.remove('actief'));
+    document.getElementById('domein-'+domein.id).classList.add('actief');
+    sluitDetail();
+  };
+  navKnoppen.appendChild(navKnop);
+
+  const sectie=document.createElement('div');
+  sectie.className='domein-sectie'+(di===0?' actief':'');
+  sectie.id='domein-'+domein.id;
+  const doelList=doelen.filter(d=>d.domein===domein.id);
+  sectie.innerHTML=`<div class="domein-header"><h2>${domein.naam}</h2><p>${doelList.length} leerdoel${doelList.length>1?'en':''} — klik op een kaart om de leerlijn te bekijken</p></div><div class="kaarten-grid" id="grid-${domein.id}"></div>`;
+  domeinContainer.appendChild(sectie);
+
+  const grid=sectie.querySelector('.kaarten-grid');
+  doelList.forEach(doel=>{
+    const kaart=document.createElement('div');
+    kaart.className=`doel-kaart ${doel.klasse}`;
+    kaart.id='kaart-'+doel.id;
+    let icoonHtml;
+    if(doel.svg) icoonHtml=`<div class="doel-icoon-svg">${doel.svg}</div>`;
+    else if(doel.ms) icoonHtml=`<span class="ms-icon" style="background:${doel.ms}">${doel.icoonTekst}</span>`;
+    else if(doel.isHalf) icoonHtml=`<span class="doel-icoon" style="font-size:20px;font-weight:800;color:#1B5E20;">½</span>`;
+    else icoonHtml=`<span class="doel-icoon">${doel.icoon}</span>`;
+    kaart.innerHTML=`${icoonHtml}<div class="doel-tekst"><div class="cat">${klasseNamen[doel.klasse]||doel.klasse}</div><div class="naam">${doel.naam}</div></div>`;
+    kaart.onclick=()=>openDetail(doel);
+    grid.appendChild(kaart);
+  });
+});
+
+// ─── DETAIL PANEL ─────────────────────────────────────────────────────────────
+let huidigDoel=null;
+let rubricCache={};
+
+async function openDetail(doel){
+  huidigDoel=doel;
+  document.querySelectorAll('.doel-kaart').forEach(k=>k.classList.remove('actief-kaart'));
+  document.getElementById('kaart-'+doel.id).classList.add('actief-kaart');
+  document.getElementById('detail-titel').textContent=doel.naam;
+  document.getElementById('detail-meta').textContent=doel.domein.toUpperCase();
+  document.getElementById('opslaan-bev').style.display='none';
+  document.getElementById('status-msg').textContent='⏳ Laden...';
+  try{
+    const snap=await getDoc(doc(db,'leerlijnen',doel.id));
+    rubricCache[doel.id]=snap.exists()?snap.data().rubric:null;
+  }catch(e){rubricCache[doel.id]=null;}
+  document.getElementById('status-msg').textContent='';
+  bouwTabs(doel);
+  document.getElementById('leerlijn-detail').style.display='block';
+  document.getElementById('leerlijn-detail').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function bouwTabs(doel){
+  const tabsBalk=document.getElementById('doel-tabs');
+  const panelContainer=document.getElementById('doel-panels');
+  tabsBalk.innerHTML=''; panelContainer.innerHTML='';
+
+  doel.tabs.forEach((tab,ti)=>{
+    const tabKnop=document.createElement('button');
+    tabKnop.className='doel-tab'+(ti===0?' actief':'');
+    tabKnop.textContent=tab.titel;
+    tabKnop.onclick=()=>{
+      tabsBalk.querySelectorAll('.doel-tab').forEach(t=>t.classList.remove('actief'));
+      panelContainer.querySelectorAll('.doel-panel').forEach(p=>p.classList.remove('actief'));
+      tabKnop.classList.add('actief');
+      document.getElementById(`panel-${doel.id}-${ti}`).classList.add('actief');
+    };
+    tabsBalk.appendChild(tabKnop);
+
+    const panel=document.createElement('div');
+    panel.className='doel-panel'+(ti===0?' actief':'');
+    panel.id=`panel-${doel.id}-${ti}`;
+
+    let html=`<div class="rubric-wrap"><table class="rubric-tabel"><thead><tr><th style="min-width:110px;max-width:130px;text-align:left;background:#f8f8f8;">Categorie</th>`;
+    for(let f=1;f<=5;f++) html+=`<th class="fase-header-cel">${maakBatterij(f)}</th>`;
+    html+=`</tr></thead><tbody id="tbody-${doel.id}-${ti}"></tbody></table></div>`;
+    html+=`<button class="voeg-rij-knop" onclick="voegRijToe('${doel.id}',${ti})">+ Rij toevoegen</button>`;
+    panel.innerHTML=html;
+    panelContainer.appendChild(panel);
+
+    const opgeslagenRijen=rubricCache[doel.id]?.[ti]||null;
+    const bronRijen=opgeslagenRijen?Object.values(opgeslagenRijen):tab.rijen;
+    const tbody=document.getElementById(`tbody-${doel.id}-${ti}`);
+
+    // Vaste 'beschrijving voor de leerling' rij bovenaan
+    const beschrijvingRij = document.createElement('tr');
+    beschrijvingRij.className = 'beschrijving-rij';
+    beschrijvingRij.id = `beschrijving-${doel.id}-${ti}`;
+    const opgeslagenBeschr = rubricCache[doel.id]?.[`beschrijving_${ti}`] || ['','','','',''];
+    let beschrHtml = `<td><textarea class="cat-cel" style="color:#1a3a8a;font-weight:700;" readonly>Beschrijving voor de leerling</textarea></td>`;
+    for(let fi=0;fi<5;fi++) beschrHtml += `<td style="background:#EEF4FF;"><textarea class="rubric-cel" id="beschr-${doel.id}-${ti}-${fi}" placeholder="Beschrijving fase ${fi+1}...">${opgeslagenBeschr[fi]||''}</textarea></td>`;
+    beschrijvingRij.innerHTML = beschrHtml;
+    tbody.appendChild(beschrijvingRij);
+
+    bronRijen.forEach((rij,ri)=>vulRij(tbody,doel.id,ti,ri,rij));
+  });
+}
+
+function vulRij(tbody,doelId,ti,ri,rij){
+  const tr=document.createElement('tr');
+  tr.id=`rij-${doelId}-${ti}-${ri}`;
+  let html=`<td style="min-width:110px;max-width:130px;background:#f8f8f8;"><button class="verwijder-rij" onclick="verwijderRij('${doelId}',${ti},${ri})" title="Verwijder rij">✕</button><textarea class="cat-cel" id="cat-${doelId}-${ti}-${ri}" placeholder="Categorie...">${rij.cat||''}</textarea></td>`;
+  for(let fi=0;fi<5;fi++) html+=`<td><textarea class="rubric-cel" id="cel-${doelId}-${ti}-${ri}-${fi}" placeholder="Fase ${fi+1}...">${rij.f?.[fi]||''}</textarea></td>`;
+  tr.innerHTML=html;
+  tbody.appendChild(tr);
+}
+
+window.voegRijToe=function(doelId,ti){
+  const tbody=document.getElementById(`tbody-${doelId}-${ti}`);
+  const ri=tbody.querySelectorAll('tr').length;
+  vulRij(tbody,doelId,ti,ri,{cat:'',f:['','','','','']});
+};
+
+window.verwijderRij=function(doelId,ti,ri){
+  const rij=document.getElementById(`rij-${doelId}-${ti}-${ri}`);
+  if(rij) rij.remove();
+};
+
+window.sluitDetail=function(){
+  document.getElementById('leerlijn-detail').style.display='none';
+  document.querySelectorAll('.doel-kaart').forEach(k=>k.classList.remove('actief-kaart'));
+  huidigDoel=null;
+};
+
+window.slaanOp=async function(){
+  if(!huidigDoel)return;
+  const rubric={};
+  huidigDoel.tabs.forEach((tab,ti)=>{
+    rubric[ti]={};
+    const tbody=document.getElementById(`tbody-${huidigDoel.id}-${ti}`);
+    if(!tbody)return;
+    tbody.querySelectorAll('tr:not(.beschrijving-rij)').forEach((rij,ri)=>{
+      const cat=document.getElementById(`cat-${huidigDoel.id}-${ti}-${ri}`)?.value||'';
+      const f=[];
+      for(let fi=0;fi<5;fi++) f.push(document.getElementById(`cel-${huidigDoel.id}-${ti}-${ri}-${fi}`)?.value||'');
+      rubric[ti][ri]={cat,f};
+    });
+    // Beschrijving rij opslaan
+    const beschr=[];
+    for(let fi=0;fi<5;fi++) beschr.push(document.getElementById(`beschr-${huidigDoel.id}-${ti}-${fi}`)?.value||'');
+    rubric[`beschrijving_${ti}`]=beschr;
+  });
+  document.getElementById('status-msg').textContent='⏳ Opslaan...';
+  try{
+    await setDoc(doc(db,'leerlijnen',huidigDoel.id),{rubric});
+    rubricCache[huidigDoel.id]=rubric;
+    document.getElementById('status-msg').textContent='';
+    document.getElementById('opslaan-bev').style.display='inline';
+    setTimeout(()=>document.getElementById('opslaan-bev').style.display='none',3000);
+  }catch(e){document.getElementById('status-msg').textContent='⚠️ Opslaan mislukt.';}
+};
+
+// Auto-resize textareas
+document.addEventListener('input', e => {
+  if (e.target.classList.contains('rubric-cel') || e.target.classList.contains('cat-cel')) {
+    e.target.style.height = 'auto';
+    e.target.style.height = e.target.scrollHeight + 'px';
+  }
+});
+</script>
+</body>
+</html>
