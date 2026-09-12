@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OKAN Portfolio</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #F0F2F5; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+  .container { max-width: 460px; width: 100%; text-align: center; }
+  .logo { font-size: 48px; margin-bottom: 16px; }
+  h1 { font-size: 24px; font-weight: 700; color: #1a1a1a; margin-bottom: 6px; }
+  .subtitel { font-size: 14px; color: #666; margin-bottom: 40px; }
+  .knoppen { display: flex; flex-direction: column; gap: 16px; }
+  .knop { display: flex; align-items: center; gap: 20px; width: 100%; background: white; border: none; border-radius: 16px; padding: 24px 28px; text-decoration: none; box-shadow: 0 2px 8px rgba(0,0,0,0.09); transition: transform 0.15s, box-shadow 0.15s; cursor: pointer; border-left: 6px solid; text-align: left; font-family: inherit; }
+  .knop:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.13); }
+  .knop-leerling    { border-color: #2B579A; }
+  .knop-leerkracht  { border-color: #F5C400; }
+  .knop-oefeningen  { border-color: #2E8B57; }
+  .knop-nederlands  { border-color: #D9534F; }
+  .knop-wiskunde    { border-color: #6B4FA0; }
+  .knop-getallenspel{ border-color: #2CA6A4; }
+  .knop-icoon { font-size: 36px; flex-shrink: 0; }
+  .knop-titel { font-size: 17px; font-weight: 700; color: #1a1a1a; margin-bottom: 3px; }
+  .knop-sub { font-size: 13px; color: #888; }
+  .pijl { font-size: 20px; color: #ccc; margin-left: auto; flex-shrink: 0; }
+  footer { margin-top: 40px; font-size: 12px; color: #bbb; }
+
+  .screen.hidden { display: none; }
+
+  .terug { display: inline-flex; align-items: center; gap: 6px; background: none; border: none; font-family: inherit; font-size: 13px; font-weight: 600; color: #888; cursor: pointer; margin-bottom: 22px; padding: 6px 0; }
+  .terug:hover { color: #444; }
+
+  .placeholder { background: white; border-radius: 16px; padding: 32px 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.09); color: #888; font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div id="screen-home" class="screen">
+    <div class="logo">📚</div>
+    <h1>OKAN Portfolio</h1>
+    <p class="subtitel">Kies hieronder wie je bent.</p>
+    <div class="knoppen">
+      <a class="knop knop-leerling" href="okan_leerling.html">
+        <span class="knop-icoon">🎒</span>
+        <div>
+          <div class="knop-titel">Ik ben een leerling</div>
+          <div class="knop-sub">Leerdoelen · Mijn toekomst · Talenten</div>
+        </div>
+        <span class="pijl">→</span>
+      </a>
+      <button type="button" class="knop knop-oefeningen" onclick="toonScherm('screen-vakken')">
+        <span class="knop-icoon">🧩</span>
+        <div>
+          <div class="knop-titel">OKAN oefeningen</div>
+          <div class="knop-sub">Oefen per vak · geen login nodig</div>
+        </div>
+        <span class="pijl">→</span>
+      </button>
+      <a class="knop knop-leerkracht" href="okan_leerkracht.html">
+        <span class="knop-icoon">🎓</span>
+        <div>
+          <div class="knop-titel">Ik ben een leerkracht</div>
+          <div class="knop-sub">Overzicht · Feedback · Per klas filteren</div>
+        </div>
+        <span class="pijl">→</span>
+      </a>
+    </div>
+    <footer>OKAN Portfolio</footer>
+  </div>
+
+  <div id="screen-vakken" class="screen hidden">
+    <button type="button" class="terug" onclick="toonScherm('screen-home')">← Terug</button>
+    <div class="logo">🧩</div>
+    <h1>OKAN oefeningen</h1>
+    <p class="subtitel">Kies een vak om te oefenen.</p>
+    <div class="knoppen">
+      <button type="button" class="knop knop-nederlands" onclick="toonScherm('screen-nederlands')">
+        <span class="knop-icoon">🗣️</span>
+        <div>
+          <div class="knop-titel">Nederlands</div>
+          <div class="knop-sub">Woordenschat · Luisteren · Lezen</div>
+        </div>
+        <span class="pijl">→</span>
+      </button>
+      <button type="button" class="knop knop-wiskunde" onclick="toonScherm('screen-wiskunde')">
+        <span class="knop-icoon">🔢</span>
+        <div>
+          <div class="knop-titel">Wiskunde</div>
+          <div class="knop-sub">Getallen · Rekenen</div>
+        </div>
+        <span class="pijl">→</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="screen-nederlands" class="screen hidden">
+    <button type="button" class="terug" onclick="toonScherm('screen-vakken')">← Terug</button>
+    <div class="logo">🗣️</div>
+    <h1>Nederlands</h1>
+    <p class="subtitel">Oefeningen voor dit vak.</p>
+    <div class="placeholder">Hier komen binnenkort oefeningen voor Nederlands.</div>
+  </div>
+
+  <div id="screen-wiskunde" class="screen hidden">
+    <button type="button" class="terug" onclick="toonScherm('screen-vakken')">← Terug</button>
+    <div class="logo">🔢</div>
+    <h1>Wiskunde</h1>
+    <p class="subtitel">Oefeningen voor dit vak.</p>
+    <div class="knoppen">
+      <a class="knop knop-getallenspel" href="getallenspel.html">
+        <span class="knop-icoon">🎯</span>
+        <div>
+          <div class="knop-titel">Getallenspel &lt;20</div>
+          <div class="knop-sub">Luister en klik op het juiste getal</div>
+        </div>
+        <span class="pijl">→</span>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function toonScherm(id) {
+    document.querySelectorAll('.screen').forEach(function(s) { s.classList.add('hidden'); });
+    document.getElementById(id).classList.remove('hidden');
+  }
+</script>
+</body>
+</html>
